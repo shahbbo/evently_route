@@ -1,5 +1,6 @@
 import 'package:event_planning_app/features/on_boarding/presentation/pages/on_boarding1.dart';
 import 'package:event_planning_app/features/on_boarding/presentation/pages/on_boarding2.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/network/local/cache_helper.dart';
@@ -13,6 +14,9 @@ import 'features/provider/language_provider.dart';
 import 'features/provider/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'firebase_options.dart';
+
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +27,9 @@ void main() async {
   } else {
     initialRoute = LoginScreen.routeName;
   }
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => AppLanguageProvider()..loadLanguageFromCache()),
     ChangeNotifierProvider(create: (context) => AppThemeProvider()..loadThemeFromCache())
