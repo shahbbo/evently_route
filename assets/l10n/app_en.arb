@@ -60,6 +60,7 @@
     "pleaseEnterTitle": "Please enter title",
     "pleaseEnterDescription": "Please enter description",
   "eventAdded": "Event Added Successfully",
-  "eventDetails": "Event Details"
+  "eventDetails": "Event Details",
+  "editEvent": "Edit Event"
 
 }

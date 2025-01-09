@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_planning_app/features/edit_event_screen/presentation/pages/edit_event_screen.dart';
 import 'package:event_planning_app/features/event_details_screen/presentation/pages/event_details.dart';
 import 'package:event_planning_app/features/on_boarding/presentation/pages/on_boarding1.dart';
 import 'package:event_planning_app/features/on_boarding/presentation/pages/on_boarding2.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
         ForgetPassword.routeName: (context) => ForgetPassword(),
         HomeScreen.routeName: (context) => HomeScreen(),
         EventDetails.routeName: (context) => EventDetails(),
+        EditEventScreen.routeName: (context) => EditEventScreen(),
         CreateEvent.routeName: (context) => CreateEvent(),
       },
       localeResolutionCallback: (deviceLocal, supportedLocales) {

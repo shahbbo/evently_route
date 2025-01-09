@@ -1,34 +1,25 @@
-import 'dart:async';
-
-import 'package:cherry_toast/cherry_toast.dart';
-import 'package:cherry_toast/resources/arrays.dart';
-import 'package:event_planning_app/core/reuseable_widgets/custom_button.dart';
-import 'package:event_planning_app/features/create_event_screen/data/event_model.dart';
-import 'package:event_planning_app/features/home_screen/views/home_view/provider/home_provider.dart';
-import 'package:event_planning_app/features/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../core/recources/app_colors.dart';
 import '../../../../core/recources/app_styles.dart';
 import '../../../../core/recources/assets_manager.dart';
+import '../../../../core/reuseable_widgets/custom_button.dart';
 import '../../../../core/reuseable_widgets/custom_text_form_feild.dart';
 import '../../../../core/reuseable_widgets/tab_event_widget.dart';
-import '../../../fire_base/firebase_func.dart';
+import '../../../create_event_screen/data/event_model.dart';
+import '../../../provider/theme_provider.dart';
 
-class CreateEvent extends StatefulWidget {
-  static const String routeName = 'createEvent';
-
-  const CreateEvent({super.key});
-
+class EditEventScreen extends StatefulWidget {
+  const EditEventScreen({super.key});
+  static const String routeName = 'editEvent';
   @override
-  State<CreateEvent> createState() => _CreateEventState();
+  State<EditEventScreen> createState() => _EditEventScreenState();
 }
 
-class _CreateEventState extends State<CreateEvent> {
+class _EditEventScreenState extends State<EditEventScreen> {
   int selectedTab = 0;
-
   String category = '';
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -37,9 +28,9 @@ class _CreateEventState extends State<CreateEvent> {
   String location = '';
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late String eventImage;
-
   @override
   Widget build(BuildContext context) {
+    final EventModel eventModel = ModalRoute.of(context)!.settings.arguments as EventModel;
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context);
@@ -68,13 +59,19 @@ class _CreateEventState extends State<CreateEvent> {
       AssetsManager.bookclubBg,
       AssetsManager.workshopBg,
     ];
+    category = eventModel.category!;
+    selectedTab = eventList.indexOf(category);
     eventImage = eventImageList[selectedTab];
+    titleController.text = eventModel.title!;
+    descriptionController.text = eventModel.description!;
+    date = eventModel.date!;
+    time = eventModel.time!;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.white,
         forceMaterialTransparency: true,
         title: Text(
-          AppLocalizations.of(context)!.create_event,
+          AppLocalizations.of(context)!.editEvent,
           style: AppStyle.primary20bold.copyWith(color: AppColors.blue),
         ),
         centerTitle: true,
@@ -123,11 +120,11 @@ class _CreateEventState extends State<CreateEvent> {
                         labelPadding: EdgeInsets.all(5),
                         tabs: eventList
                             .map((eventName) => TabEventWidget(
-                                  tabName: eventName,
-                                  isCreateEvent: true,
-                                  selectedTab: selectedTab ==
-                                      eventList.indexOf(eventName),
-                                ))
+                          tabName: eventName,
+                          isCreateEvent: true,
+                          selectedTab: selectedTab ==
+                              eventList.indexOf(eventName),
+                        ))
                             .toList())),
                 Text(
                   AppLocalizations.of(context)!.title,
@@ -320,11 +317,9 @@ class _CreateEventState extends State<CreateEvent> {
                   height: height * .02,
                 ),
                 CustomButton(
-                  onTap: () {
-                    addEvent();
-                  },
+                  onTap: () {},
                   buttonColor: AppColors.blue,
-                  buttonName: AppLocalizations.of(context)!.addEvent,
+                  buttonName: AppLocalizations.of(context)!.editEvent,
                   textColor: AppColors.white,
                   borderColor: AppColors.blue,
                 )
@@ -338,7 +333,7 @@ class _CreateEventState extends State<CreateEvent> {
 
   void onDatePicked(BuildContext context) async {
     AppThemeProvider themeProvider =
-        Provider.of<AppThemeProvider>(context, listen: false);
+    Provider.of<AppThemeProvider>(context, listen: false);
     DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -348,23 +343,23 @@ class _CreateEventState extends State<CreateEvent> {
         return Theme(
           data: themeProvider.appTheme == ThemeMode.light
               ? ThemeData.light().copyWith(
-                  colorScheme: ColorScheme.light(
-                    primary: AppColors.blue,
-                    onPrimary: AppColors.black,
-                    surface: AppColors.white,
-                    onSurface: AppColors.black,
-                  ),
-                  dialogBackgroundColor: AppColors.white,
-                )
+            colorScheme: ColorScheme.light(
+              primary: AppColors.blue,
+              onPrimary: AppColors.black,
+              surface: AppColors.white,
+              onSurface: AppColors.black,
+            ),
+            dialogBackgroundColor: AppColors.white,
+          )
               : ThemeData.dark().copyWith(
-                  colorScheme: ColorScheme.dark(
-                    primary: AppColors.blue,
-                    onPrimary: AppColors.black,
-                    surface: AppColors.primaryColorDark,
-                    onSurface: AppColors.white,
-                  ),
-                  dialogBackgroundColor: AppColors.white,
-                ),
+            colorScheme: ColorScheme.dark(
+              primary: AppColors.blue,
+              onPrimary: AppColors.black,
+              surface: AppColors.primaryColorDark,
+              onSurface: AppColors.white,
+            ),
+            dialogBackgroundColor: AppColors.white,
+          ),
           child: child!,
         );
       },
@@ -375,10 +370,9 @@ class _CreateEventState extends State<CreateEvent> {
       });
     }
   }
-
   void onTimePicked(BuildContext context) async {
     AppThemeProvider themeProvider =
-        Provider.of<AppThemeProvider>(context, listen: false);
+    Provider.of<AppThemeProvider>(context, listen: false);
     TimeOfDay? selectedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
@@ -386,23 +380,23 @@ class _CreateEventState extends State<CreateEvent> {
         return Theme(
           data: themeProvider.appTheme == ThemeMode.light
               ? ThemeData.light().copyWith(
-                  colorScheme: ColorScheme.light(
-                    primary: AppColors.blue,
-                    onPrimary: AppColors.black,
-                    surface: AppColors.white,
-                    onSurface: AppColors.black,
-                  ),
-                  dialogBackgroundColor: AppColors.white,
-                )
+            colorScheme: ColorScheme.light(
+              primary: AppColors.blue,
+              onPrimary: AppColors.black,
+              surface: AppColors.white,
+              onSurface: AppColors.black,
+            ),
+            dialogBackgroundColor: AppColors.white,
+          )
               : ThemeData.dark().copyWith(
-                  colorScheme: ColorScheme.dark(
-                    primary: AppColors.blue,
-                    onPrimary: AppColors.black,
-                    surface: AppColors.primaryColorDark,
-                    onSurface: AppColors.white,
-                  ),
-                  dialogBackgroundColor: AppColors.white,
-                ),
+            colorScheme: ColorScheme.dark(
+              primary: AppColors.blue,
+              onPrimary: AppColors.black,
+              surface: AppColors.primaryColorDark,
+              onSurface: AppColors.white,
+            ),
+            dialogBackgroundColor: AppColors.white,
+          ),
           child: child!,
         );
       },
@@ -412,52 +406,6 @@ class _CreateEventState extends State<CreateEvent> {
         time = DateFormat.jm().format(
           DateTime(2021, 1, 1, selectedTime.hour, selectedTime.minute),
         );
-      });
-    }
-  }
-
-  void addEvent() {
-    EventModel event = EventModel(
-      category: category,
-      image: eventImage,
-      title: titleController.text,
-      description: descriptionController.text,
-      date: date,
-      time: time,
-      lat: 0.0,
-      long: 0.0,
-      isFavorite: false,
-    );
-    if (formKey.currentState!.validate()) {
-      FireBaseFunctions.addEvent1(event).timeout(
-          onTimeout: () {
-        throw TimeoutException('Time out');
-      }, Duration(seconds: 4)).then((value) {
-        print('Event Added');
-        CherryToast.success(
-          title: Text(AppLocalizations.of(context)!.eventAdded),
-          animationCurve: Curves.easeIn,
-          animationDuration: Duration(milliseconds: 700),
-          toastPosition: Position.top,
-        ).show(context);
-        Provider.of<HomeProvider>(context, listen: false).getAllEvents();
-        Navigator.pop(context);
-        titleController.clear();
-        descriptionController.clear();
-        setState(() {
-          date = '';
-          time = '';
-          location = '';
-        });
-      }).catchError((error) {
-        print('Error');
-        print(error);
-        CherryToast.error(
-          title: Text(error.toString()),
-          animationCurve: Curves.easeIn,
-          animationDuration: Duration(milliseconds: 700),
-          toastPosition: Position.top,
-        ).show(context);
       });
     }
   }

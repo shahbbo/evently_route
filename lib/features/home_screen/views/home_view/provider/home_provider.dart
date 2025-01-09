@@ -54,7 +54,6 @@ class HomeProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-
   void editEvent({
     required String id,
     String? title,

@@ -59,5 +59,6 @@
   "pleaseEnterTitle": "الرجاء إدخال العنوان",
     "pleaseEnterDescription": "الرجاء إدخال الوصف",
   "eventAdded": "تمت اضافة الحدث بنجاح",
-  "eventDetails" : "تفاصيل الحدث"
+  "eventDetails" : "تفاصيل الحدث",
+  "editEvent" : "تعديل الحدث"
 }

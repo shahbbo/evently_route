@@ -1,4 +1,5 @@
 import 'package:event_planning_app/core/recources/app_colors.dart';
+import 'package:event_planning_app/features/edit_event_screen/presentation/pages/edit_event_screen.dart';
 import 'package:event_planning_app/features/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,6 @@ class EventDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final EventModel eventModel = ModalRoute.of(context)!.settings.arguments as EventModel;
     var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
     AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context);
     bool isLight = themeProvider.appTheme == ThemeMode.light;
     return Scaffold(
@@ -30,7 +30,7 @@ class EventDetails extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              print(eventModel.toJson());
+              Navigator.pushNamed(context, EditEventScreen.routeName, arguments: eventModel);
             },
             icon: Icon(Icons.edit_note_outlined,color: AppColors.blue,size: 30,),
           ),
