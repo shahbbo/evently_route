@@ -28,8 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
+      resizeToAvoidBottomInset: false, //يثبت الفلوتنج بوتون دلوقتي
       extendBodyBehindAppBar: true,
-          body: viewsList[selectedIndex],
+      body: viewsList[selectedIndex],
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
           onPressed: (){
