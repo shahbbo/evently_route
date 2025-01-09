@@ -1,11 +1,11 @@
 import 'package:event_planning_app/core/network/local/cache_helper.dart';
 import 'package:event_planning_app/core/reuseable_widgets/tab_event_widget.dart';
+import 'package:event_planning_app/features/home_screen/views/home_view/provider/home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/recources/app_colors.dart';
 import '../../../../core/recources/app_styles.dart';
-import '../../../../core/recources/assets_manager.dart';
 import '../../../provider/language_provider.dart';
 import '../../../provider/theme_provider.dart';
 import 'widgets/event_widget.dart';
@@ -26,6 +26,7 @@ class _HomeViewState extends State<HomeView> {
     var width = MediaQuery.of(context).size.width;
     AppLanguageProvider languageProvider = Provider.of<AppLanguageProvider>(context);
     AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context);
+    HomeProvider homeProvider = Provider.of<HomeProvider>(context);
     List<String> eventList = [
       AppLocalizations.of(context)!.all,
       AppLocalizations.of(context)!.sport,
@@ -148,7 +149,8 @@ class _HomeViewState extends State<HomeView> {
                       child: TabBar(
                           onTap: (index){
                          setState(() {
-                           selectedTab=index;
+                           homeProvider.currentIndex=index;
+                           homeProvider.filterEvents(eventList[index]);
                          });
                        },
                           tabAlignment: TabAlignment.start,
@@ -158,7 +160,7 @@ class _HomeViewState extends State<HomeView> {
                           indicatorColor: Colors.transparent,
                           labelPadding: EdgeInsets.all(5),
                           tabs: eventList.map((eventName) => TabEventWidget(
-                                    selectedTab : selectedTab == eventList.indexOf(eventName)
+                                    selectedTab : homeProvider.currentIndex == eventList.indexOf(eventName)
                                         ? true
                                         : false,
                                     isCreateEvent: false,
@@ -170,27 +172,22 @@ class _HomeViewState extends State<HomeView> {
               ],
             ),
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    EventWidget(image: AssetsManager.birthdayBg,eventName: AppLocalizations.of(context)!.birthday,),
-                    EventWidget(image: AssetsManager.sportBg,eventName: AppLocalizations.of(context)!.sport,),
-                    EventWidget(image: AssetsManager.meetingBg,eventName: AppLocalizations.of(context)!.meeting,),
-                    EventWidget(image: AssetsManager.gamingBg,eventName: AppLocalizations.of(context)!.gaming,),
-                    EventWidget(image: AssetsManager.eatingBg,eventName: AppLocalizations.of(context)!.eating,),
-                    EventWidget(image: AssetsManager.holidayBg,eventName: AppLocalizations.of(context)!.holiday,),
-                    EventWidget(image: AssetsManager.exhibitionBg,eventName: AppLocalizations.of(context)!.exhibition,),
-                    EventWidget(image: AssetsManager.bookclubBg,eventName: AppLocalizations.of(context)!.book_club,),
-                    EventWidget(image: AssetsManager.workshopBg,eventName: AppLocalizations.of(context)!.work_shop,),
-                  ],
-                ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8, right: 8,),
+            child: SizedBox(
+              height: height * 0.73,
+              child: ListView.separated(
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) {
+                return EventWidget(
+                  eventModel: homeProvider.filteredEvents[index],
+                );
+              },
+                itemCount: homeProvider.filteredEvents.length,
+                separatorBuilder: (context, index) => SizedBox(height: height*0.005,),
               ),
             ),
-          ),
-          SizedBox(height: height * 0.1,)
+          )
         ],
       ),
     );

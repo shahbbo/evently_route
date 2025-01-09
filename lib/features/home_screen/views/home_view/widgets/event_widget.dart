@@ -1,15 +1,17 @@
+import 'package:event_planning_app/features/create_event_screen/data/event_model.dart';
 import 'package:event_planning_app/features/provider/theme_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../core/recources/app_colors.dart';
 import '../../../../../core/recources/app_styles.dart';
+import '../../../../../core/recources/assets_manager.dart';
 
 class EventWidget extends StatefulWidget {
-  final String image;
-  final String eventName;
 
-  const EventWidget({super.key, required this.image, required this.eventName});
+  final EventModel eventModel;
+
+  const EventWidget({super.key,required this.eventModel});
 
   @override
   State<EventWidget> createState() => _EventWidgetState();
@@ -30,7 +32,7 @@ class _EventWidgetState extends State<EventWidget> {
       width: width,
       decoration: BoxDecoration(
         image:
-            DecorationImage(image: AssetImage(widget.image), fit: BoxFit.fill),
+            DecorationImage(image: AssetImage(widget.eventModel.image ?? ''), fit: BoxFit.fill),
         border: Border.all(width: 2, color: AppColors.primaryColorLight),
         borderRadius: BorderRadius.circular(16),
       ),
@@ -49,12 +51,12 @@ class _EventWidgetState extends State<EventWidget> {
             child: Column(
               children: [
                 Text(
-                  '21',
+                  widget.eventModel.date?.substring(0,2) ?? '',
                   textAlign: TextAlign.center,
                   style: AppStyle.primary20bold,
                 ),
                 Text(
-                  'NOV',
+                  widget.eventModel.date?.substring(2,5) ?? '',
                   textAlign: TextAlign.center,
                   style: AppStyle.primary14bold,
                 ),
@@ -74,7 +76,7 @@ class _EventWidgetState extends State<EventWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget.eventName,
+                  widget.eventModel.title ?? '',
                   textAlign: TextAlign.center,
                   style: AppStyle.primary20bold.copyWith(
                     color: themeProvider.appTheme == ThemeMode.light

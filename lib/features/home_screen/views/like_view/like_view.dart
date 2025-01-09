@@ -36,10 +36,10 @@ class LikeView extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    EventWidget(
-                      image: AssetsManager.birthdayBg,
-                      eventName: AppLocalizations.of(context)!.birthday,
-                    ),
+                    // EventWidget(
+                    //   image: AssetsManager.birthdayBg,
+                    //   eventName: AppLocalizations.of(context)!.birthday,
+                    // ),
                   ],
                 ),
               ),

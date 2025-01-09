@@ -39,7 +39,7 @@ class CustomTextFormField extends StatelessWidget {
       onTap: onTap,
       maxLines: numLines ?? 1,
       style: AppStyle.primary14bold.copyWith(
-        color: borderColor
+        color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
       ),
       cursorColor: borderColor,
       decoration: InputDecoration(

@@ -11,12 +11,12 @@ import 'features/auth/presentation/pages/forget_password.dart';
 import 'features/auth/presentation/pages/login_screen.dart';
 import 'features/create_event_screen/presentation/pages/create_event.dart';
 import 'features/home_screen/home_screen.dart';
+import 'features/home_screen/views/home_view/provider/home_provider.dart';
 import 'features/provider/language_provider.dart';
 import 'features/provider/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'features/fire_base/firebase_options.dart';
-
 
 
 void main() async {
@@ -34,7 +34,8 @@ void main() async {
   await FirebaseFirestore.instance.disableNetwork();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => AppLanguageProvider()..loadLanguageFromCache()),
-    ChangeNotifierProvider(create: (context) => AppThemeProvider()..loadThemeFromCache())
+    ChangeNotifierProvider(create: (context) => AppThemeProvider()..loadThemeFromCache()),
+    ChangeNotifierProvider(create: (context) => HomeProvider()..getAllEvents()),
   ], child: MyApp(initialRoute: initialRoute)));
 }
 

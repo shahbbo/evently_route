@@ -2,6 +2,7 @@ class EventModel {
   static const String collectionName = 'Events';
   String? id;
   String? category;
+  String? image;
   String? title;
   String? description;
   String? date;
@@ -13,6 +14,7 @@ class EventModel {
   EventModel({
     this.id = '',
     this.category,
+    this.image,
     this.title,
     this.description,
     this.date,
@@ -25,6 +27,7 @@ class EventModel {
   EventModel.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
         category = json['category'],
+        image = json['image'],
         title = json['title'],
         description = json['description'],
         date = json['date'],
@@ -36,6 +39,7 @@ class EventModel {
   Map<String, dynamic> toJson() => {
         'id': id ?? '',
         'category': category,
+        'image': image,
         'title': title,
         'description': description,
         'date': date,

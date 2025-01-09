@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:event_planning_app/core/reuseable_widgets/custom_button.dart';
 import 'package:event_planning_app/features/create_event_screen/data/event_model.dart';
+import 'package:event_planning_app/features/home_screen/views/home_view/provider/home_provider.dart';
 import 'package:event_planning_app/features/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -32,9 +35,8 @@ class _CreateEventState extends State<CreateEvent> {
   String date = '';
   String time = '';
   String location = '';
-
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
+  late String eventImage;
 
   @override
   Widget build(BuildContext context) {
@@ -66,15 +68,14 @@ class _CreateEventState extends State<CreateEvent> {
       AssetsManager.bookclubBg,
       AssetsManager.workshopBg,
     ];
+    eventImage = eventImageList[selectedTab];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.white,
         forceMaterialTransparency: true,
         title: Text(
           AppLocalizations.of(context)!.create_event,
-          style: AppStyle.primary14bold.copyWith(
-              color: AppColors.blue
-          ),
+          style: AppStyle.primary14bold.copyWith(color: AppColors.blue),
         ),
         centerTitle: true,
         iconTheme: IconThemeData(color: AppColors.blue),
@@ -96,7 +97,7 @@ class _CreateEventState extends State<CreateEvent> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     image: DecorationImage(
-                      image: AssetImage(eventImageList[selectedTab]),
+                      image: AssetImage(eventImage),
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -111,7 +112,9 @@ class _CreateEventState extends State<CreateEvent> {
                         onTap: (index) {
                           setState(() {
                             selectedTab = index;
-                            category = selectedTab == 0 ? eventList[0] : eventList[selectedTab];
+                            category = selectedTab == 0
+                                ? eventList[0]
+                                : eventList[selectedTab];
                           });
                         },
                         dividerColor: Colors.transparent,
@@ -119,19 +122,19 @@ class _CreateEventState extends State<CreateEvent> {
                         indicatorColor: Colors.transparent,
                         labelPadding: EdgeInsets.all(5),
                         tabs: eventList
-                            .map((eventName) =>
-                            TabEventWidget(
-                              tabName: eventName,
-                              isCreateEvent: true,
-                              selectedTab:
-                              selectedTab == eventList.indexOf(eventName),
-                            ))
+                            .map((eventName) => TabEventWidget(
+                                  tabName: eventName,
+                                  isCreateEvent: true,
+                                  selectedTab: selectedTab ==
+                                      eventList.indexOf(eventName),
+                                ))
                             .toList())),
                 Text(
                   AppLocalizations.of(context)!.title,
                   style: AppStyle.black16medium.copyWith(
-                    color: themeProvider.appTheme == ThemeMode.light ? AppColors
-                        .black : AppColors.white,
+                    color: themeProvider.appTheme == ThemeMode.light
+                        ? AppColors.black
+                        : AppColors.white,
                   ),
                 ),
                 SizedBox(
@@ -148,9 +151,11 @@ class _CreateEventState extends State<CreateEvent> {
                   borderColor: themeProvider.appTheme == ThemeMode.light
                       ? AppColors.gray
                       : AppColors.blue,
-                  prefixIcon: Icon(Icons.edit_note_outlined,
-                    color: themeProvider.appTheme == ThemeMode.light ? AppColors
-                        .gray : AppColors.white,
+                  prefixIcon: Icon(
+                    Icons.edit_note_outlined,
+                    color: themeProvider.appTheme == ThemeMode.light
+                        ? AppColors.gray
+                        : AppColors.white,
                   ),
                   hintText: AppLocalizations.of(context)!.title,
                 ),
@@ -160,8 +165,9 @@ class _CreateEventState extends State<CreateEvent> {
                 Text(
                   AppLocalizations.of(context)!.description,
                   style: AppStyle.black16medium.copyWith(
-                    color: themeProvider.appTheme == ThemeMode.light ? AppColors
-                        .black : AppColors.white,
+                    color: themeProvider.appTheme == ThemeMode.light
+                        ? AppColors.black
+                        : AppColors.white,
                   ),
                 ),
                 SizedBox(
@@ -171,7 +177,8 @@ class _CreateEventState extends State<CreateEvent> {
                   controller: descriptionController,
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return AppLocalizations.of(context)!.pleaseEnterDescription;
+                      return AppLocalizations.of(context)!
+                          .pleaseEnterDescription;
                     }
                     return null;
                   },
@@ -186,9 +193,11 @@ class _CreateEventState extends State<CreateEvent> {
                 ),
                 Row(
                   children: [
-                    Icon(Icons.date_range_outlined,
-                      color: themeProvider.appTheme == ThemeMode.light ? AppColors
-                          .black : AppColors.white,
+                    Icon(
+                      Icons.date_range_outlined,
+                      color: themeProvider.appTheme == ThemeMode.light
+                          ? AppColors.black
+                          : AppColors.white,
                     ),
                     SizedBox(
                       width: width * .015,
@@ -219,9 +228,11 @@ class _CreateEventState extends State<CreateEvent> {
                 ),
                 Row(
                   children: [
-                    Icon(Icons.access_time,
-                      color: themeProvider.appTheme == ThemeMode.light ? AppColors
-                          .black : AppColors.white,
+                    Icon(
+                      Icons.access_time,
+                      color: themeProvider.appTheme == ThemeMode.light
+                          ? AppColors.black
+                          : AppColors.white,
                     ),
                     SizedBox(
                       width: width * .015,
@@ -253,14 +264,16 @@ class _CreateEventState extends State<CreateEvent> {
                 Text(
                   AppLocalizations.of(context)!.location,
                   style: AppStyle.black16medium.copyWith(
-                    color: themeProvider.appTheme == ThemeMode.light ? AppColors.black : AppColors.white,
+                    color: themeProvider.appTheme == ThemeMode.light
+                        ? AppColors.black
+                        : AppColors.white,
                   ),
                 ),
                 SizedBox(
                   height: height * .01,
                 ),
                 InkWell(
-                  onTap: (){},
+                  onTap: () {},
                   child: Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -279,7 +292,8 @@ class _CreateEventState extends State<CreateEvent> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           padding: EdgeInsets.all(10),
-                          child: Icon(Icons.location_searching,
+                          child: Icon(
+                            Icons.location_searching,
                             color: AppColors.white,
                           ),
                         ),
@@ -294,7 +308,8 @@ class _CreateEventState extends State<CreateEvent> {
                           ),
                         ),
                         Spacer(),
-                        Icon(Icons.arrow_forward_ios,
+                        Icon(
+                          Icons.arrow_forward_ios,
                           color: AppColors.blue,
                         ),
                       ],
@@ -305,13 +320,14 @@ class _CreateEventState extends State<CreateEvent> {
                   height: height * .02,
                 ),
                 CustomButton(
-                    onTap: (){
-                      addEvent();
-                    },
-                    buttonColor: AppColors.blue,
-                    buttonName: AppLocalizations.of(context)!.addEvent,
-                    textColor: AppColors.white,
-                    borderColor: AppColors.blue,)
+                  onTap: () {
+                    addEvent();
+                  },
+                  buttonColor: AppColors.blue,
+                  buttonName: AppLocalizations.of(context)!.addEvent,
+                  textColor: AppColors.white,
+                  borderColor: AppColors.blue,
+                )
               ],
             ),
           ),
@@ -321,7 +337,8 @@ class _CreateEventState extends State<CreateEvent> {
   }
 
   void onDatePicked(BuildContext context) async {
-    AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
+    AppThemeProvider themeProvider =
+        Provider.of<AppThemeProvider>(context, listen: false);
     DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -331,36 +348,37 @@ class _CreateEventState extends State<CreateEvent> {
         return Theme(
           data: themeProvider.appTheme == ThemeMode.light
               ? ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColors.blue,
-              onPrimary: AppColors.black,
-              surface: AppColors.white,
-              onSurface: AppColors.black,
-            ),
-            dialogBackgroundColor: AppColors.white,
-          )
+                  colorScheme: ColorScheme.light(
+                    primary: AppColors.blue,
+                    onPrimary: AppColors.black,
+                    surface: AppColors.white,
+                    onSurface: AppColors.black,
+                  ),
+                  dialogBackgroundColor: AppColors.white,
+                )
               : ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.dark(
-              primary: AppColors.blue,
-              onPrimary: AppColors.black,
-              surface: AppColors.primaryColorDark,
-              onSurface: AppColors.white,
-            ),
-            dialogBackgroundColor: AppColors.white,
-          ),
+                  colorScheme: ColorScheme.dark(
+                    primary: AppColors.blue,
+                    onPrimary: AppColors.black,
+                    surface: AppColors.primaryColorDark,
+                    onSurface: AppColors.white,
+                  ),
+                  dialogBackgroundColor: AppColors.white,
+                ),
           child: child!,
         );
       },
     );
     if (selectedDate != null) {
       setState(() {
-        date = DateFormat('dd/MM/yyyy').format(selectedDate);
+        date = DateFormat('d MMMM yyyy').format(selectedDate);
       });
     }
   }
+
   void onTimePicked(BuildContext context) async {
-    AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(
-        context, listen: false);
+    AppThemeProvider themeProvider =
+        Provider.of<AppThemeProvider>(context, listen: false);
     TimeOfDay? selectedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
@@ -368,23 +386,23 @@ class _CreateEventState extends State<CreateEvent> {
         return Theme(
           data: themeProvider.appTheme == ThemeMode.light
               ? ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColors.blue,
-              onPrimary: AppColors.black,
-              surface: AppColors.white,
-              onSurface: AppColors.black,
-            ),
-            dialogBackgroundColor: AppColors.white,
-          )
+                  colorScheme: ColorScheme.light(
+                    primary: AppColors.blue,
+                    onPrimary: AppColors.black,
+                    surface: AppColors.white,
+                    onSurface: AppColors.black,
+                  ),
+                  dialogBackgroundColor: AppColors.white,
+                )
               : ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.dark(
-              primary: AppColors.blue,
-              onPrimary: AppColors.black,
-              surface: AppColors.primaryColorDark,
-              onSurface: AppColors.white,
-            ),
-            dialogBackgroundColor: AppColors.white,
-          ),
+                  colorScheme: ColorScheme.dark(
+                    primary: AppColors.blue,
+                    onPrimary: AppColors.black,
+                    surface: AppColors.primaryColorDark,
+                    onSurface: AppColors.white,
+                  ),
+                  dialogBackgroundColor: AppColors.white,
+                ),
           child: child!,
         );
       },
@@ -401,6 +419,7 @@ class _CreateEventState extends State<CreateEvent> {
   void addEvent() {
     EventModel event = EventModel(
       category: category,
+      image: eventImage,
       title: titleController.text,
       description: descriptionController.text,
       date: date,
@@ -409,19 +428,11 @@ class _CreateEventState extends State<CreateEvent> {
       long: 0.0,
       isFavorite: false,
     );
-    print(time);
-    print(date);
-    print(titleController.text);
-    print(descriptionController.text);
-    print(category);
     if (formKey.currentState!.validate()) {
-      print('Validated');
-      print(time);
-      print(date);
-      print(titleController.text);
-      print(descriptionController.text);
-      print(category);
-      FireBaseFunctions.addEvent(event).timeout(Duration(seconds: 7)).then((value) {
+      FireBaseFunctions.addEvent1(event).timeout(
+          onTimeout: () {
+        throw TimeoutException('Time out');
+      }, Duration(seconds: 4)).then((value) {
         print('Event Added');
         CherryToast.success(
           title: Text(AppLocalizations.of(context)!.eventAdded),
@@ -429,6 +440,7 @@ class _CreateEventState extends State<CreateEvent> {
           animationDuration: Duration(milliseconds: 700),
           toastPosition: Position.top,
         ).show(context);
+        Provider.of<HomeProvider>(context, listen: false).getAllEvents();
         Navigator.pop(context);
         titleController.clear();
         descriptionController.clear();
@@ -450,4 +462,3 @@ class _CreateEventState extends State<CreateEvent> {
     }
   }
 }
-

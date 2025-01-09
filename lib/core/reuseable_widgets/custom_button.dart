@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../recources/app_styles.dart';
 
@@ -38,9 +39,7 @@ class CustomButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          icon!=null?
-          Image(image: AssetImage(icon!))
-          :Text(''),
+          icon!=null ? SvgPicture.asset(icon!) : Text(''),
           SizedBox(width: width*.02,),
           Text(
             buttonName,
