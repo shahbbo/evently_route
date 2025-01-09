@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_planning_app/features/on_boarding/presentation/pages/on_boarding1.dart';
 import 'package:event_planning_app/features/on_boarding/presentation/pages/on_boarding2.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,7 +15,7 @@ import 'features/provider/language_provider.dart';
 import 'features/provider/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'firebase_options.dart';
+import 'features/fire_base/firebase_options.dart';
 
 
 
@@ -30,6 +31,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseFirestore.instance.disableNetwork();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => AppLanguageProvider()..loadLanguageFromCache()),
     ChangeNotifierProvider(create: (context) => AppThemeProvider()..loadThemeFromCache())

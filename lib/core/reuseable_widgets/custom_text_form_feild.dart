@@ -14,6 +14,9 @@ class CustomTextFormField extends StatelessWidget {
  final String? hintText;
  final int? numLines;
  final bool? obscureText;
+ final String? Function(String?)? validator;
+ final VoidCallback? onTap;
+
   const CustomTextFormField({super.key,
     required this.borderColor,
     this.hintText,
@@ -22,6 +25,8 @@ class CustomTextFormField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.obscureText,
+    this.validator,
+    this.onTap,
   });
 
   @override
@@ -31,13 +36,17 @@ class CustomTextFormField extends StatelessWidget {
       obscureText: obscureText ?? false,
       obscuringCharacter: '*',
       controller: controller,
-      onTap: (){},
+      onTap: onTap,
       maxLines: numLines ?? 1,
       style: AppStyle.primary14bold.copyWith(
         color: borderColor
       ),
       cursorColor: borderColor,
       decoration: InputDecoration(
+        border: OutlineInputBorder(
+            borderSide: BorderSide(color:borderColor ,width: 1,),
+            borderRadius: BorderRadius.circular(16)
+        ),
         enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color:borderColor ,width: 1,),
             borderRadius: BorderRadius.circular(16)
@@ -57,6 +66,7 @@ class CustomTextFormField extends StatelessWidget {
         ),
         hintText:hintText,
       ),
+      validator: validator,
     );
   }
 }
