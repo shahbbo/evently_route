@@ -5,7 +5,8 @@ import '../../../../fire_base/firebase_func.dart';
 
 class HomeProvider extends ChangeNotifier {
   int currentIndex = 0;
-  List<String> eventList = [] ;
+  List<String> eventList = [];
+
   void getEventNameList(BuildContext context) {
     eventList = [
       AppLocalizations.of(context)!.all,
@@ -20,7 +21,9 @@ class HomeProvider extends ChangeNotifier {
       AppLocalizations.of(context)!.work_shop,
     ];
   }
+
   List<EventModel> events = [];
+
   Future<void> getAllEvents() async {
     FireBaseFunctions.getEventsCollection().get().then((value) {
       events = value.docs.map((doc) => doc.data()).toList();
@@ -32,16 +35,79 @@ class HomeProvider extends ChangeNotifier {
       print("Error: $e");
     });
   }
+
   List<EventModel> filteredEvents = [];
-  void filterEvents(BuildContext context) {
+
+  Future<void> filterEvents(BuildContext context) async {
     if (eventList.isEmpty) {
       getEventNameList(context);
     }
     if (currentIndex == 0) {
       filteredEvents = events;
+      print("All events: $filteredEvents");
     } else {
-      filteredEvents = events.where((element) => element.category == eventList[currentIndex]).toList();
+      filteredEvents = events
+          .where((element) => element.category == eventList[currentIndex])
+          .toList();
+      print(eventList[currentIndex]);
+      print("${eventList[currentIndex]}: $filteredEvents");
     }
+    notifyListeners();
+  }
+
+  void editEvent({
+    required String id,
+    String? title,
+    String? description,
+    String? date,
+    String? time,
+    String? image,
+    String? category,
+    bool? isFavorite,
+  }) {
+    print("Event id: $id");
+    events.forEach((doc) {
+      print("Document ID: ${doc.id}");
+    });
+    Map<String, dynamic> updatedData = {};
+    if (title != null) updatedData['title'] = title;
+    if (date != null) updatedData['date'] = date;
+    if (time != null) updatedData['time'] = time;
+    if (image != null) updatedData['image'] = image;
+    if (category != null) updatedData['category'] = category;
+    if (isFavorite != null) updatedData['isFavorite'] = isFavorite;
+    if (description != null) updatedData['description'] = description;
+    print("Updated data: $updatedData");
+    FireBaseFunctions.getEventsCollection()
+        .doc(id)
+        .update(
+          updatedData,
+        )
+        .then((value) {
+      print("Event updated");
+      getAllEvents();
+    }).catchError((e) {
+      print("Error: $e");
+    });
+    notifyListeners();
+  }
+
+  void updateEvent({required String id, required Map<String, dynamic> updatedData}) {
+    FireBaseFunctions.getEventsCollection().doc(id).get().then((doc) {
+      if (doc.exists) {
+        doc.reference.update(updatedData).then((_) {
+          print("Document updated successfully");
+          getAllEvents();
+        }).catchError((e) {
+          print("Error updating document: $e");
+        });
+      } else {
+        print("Document does not exist");
+      }
+    }).catchError((e) {
+      print("Error fetching document: $e");
+    });
+
     notifyListeners();
   }
 /*  void changeIndex(int index) {

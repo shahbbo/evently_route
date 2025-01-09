@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_planning_app/features/create_event_screen/data/event_model.dart';
 import 'package:event_planning_app/features/event_details_screen/presentation/pages/event_details.dart';
+import 'package:event_planning_app/features/home_screen/views/home_view/provider/home_provider.dart';
 import 'package:event_planning_app/features/provider/theme_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../core/recources/app_colors.dart';
 import '../../../../../core/recources/app_styles.dart';
+import '../../../../fire_base/firebase_func.dart';
 
 class EventWidget extends StatefulWidget {
 
@@ -16,15 +19,14 @@ class EventWidget extends StatefulWidget {
   @override
   State<EventWidget> createState() => _EventWidgetState();
 }
-
-bool isFav = false;
-
 class _EventWidgetState extends State<EventWidget> {
   @override
   Widget build(BuildContext context) {
+    bool isFav = widget.eventModel.isFavorite!;
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context);
+    HomeProvider homeProvider = Provider.of<HomeProvider>(context);
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, EventDetails.routeName, arguments: widget.eventModel);
@@ -96,7 +98,21 @@ class _EventWidgetState extends State<EventWidget> {
                     ),
                     onPressed: () {
                       setState(() {
+                        print("Is fav: $isFav");
+                        print("Event model: ${widget.eventModel.toJson()}");
                         isFav = !isFav;
+                        print("Is fav after: $isFav");
+                        widget.eventModel.isFavorite = isFav;
+                        print("Event model after: ${widget.eventModel.toJson()}");
+                        homeProvider.updateEvent(
+                            id: widget.eventModel.id ?? '',
+                            updatedData: {
+                              'isFavorite': isFav,
+                            });
+                        homeProvider.editEvent(
+                          id: widget.eventModel.id ?? '',
+                          isFavorite: isFav,
+                        );
                       });
                     },
                   ),
