@@ -17,8 +17,8 @@ class EditEventScreen extends StatefulWidget {
   @override
   State<EditEventScreen> createState() => _EditEventScreenState();
 }
-
 class _EditEventScreenState extends State<EditEventScreen> {
+  List<String> eventList = [];
   int selectedTab = 0;
   String category = '';
   TextEditingController titleController = TextEditingController();
@@ -28,13 +28,19 @@ class _EditEventScreenState extends State<EditEventScreen> {
   String location = '';
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late String eventImage;
-  @override
-  Widget build(BuildContext context) {
-    final EventModel eventModel = ModalRoute.of(context)!.settings.arguments as EventModel;
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
-    AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context);
-    List<String> eventList = [
+  List<String> eventImageList = [
+    AssetsManager.sportBg,
+    AssetsManager.birthdayBg,
+    AssetsManager.meetingBg,
+    AssetsManager.gamingBg,
+    AssetsManager.eatingBg,
+    AssetsManager.holidayBg,
+    AssetsManager.exhibitionBg,
+    AssetsManager.bookclubBg,
+    AssetsManager.workshopBg,
+  ];
+  void getEventNameList(BuildContext context) {
+    eventList = [
       AppLocalizations.of(context)!.sport,
       AppLocalizations.of(context)!.birthday,
       AppLocalizations.of(context)!.meeting,
@@ -45,27 +51,32 @@ class _EditEventScreenState extends State<EditEventScreen> {
       AppLocalizations.of(context)!.book_club,
       AppLocalizations.of(context)!.work_shop,
     ];
+  }
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final EventModel eventModel = ModalRoute.of(context)!.settings.arguments as EventModel;
+      setState(() {
+        getEventNameList(context);
+        category = eventModel.category ?? '';
+        selectedTab = eventList.indexOf(category);
+        eventImage = eventImageList[selectedTab];
+        titleController.text = eventModel.title ?? '';
+        descriptionController.text = eventModel.description ?? '';
+        date = eventModel.date ?? '';
+        time = eventModel.time ?? '';
+      });
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context);
     if (category.isEmpty) {
       category = eventList[0];
     }
-    List<String> eventImageList = [
-      AssetsManager.sportBg,
-      AssetsManager.birthdayBg,
-      AssetsManager.meetingBg,
-      AssetsManager.gamingBg,
-      AssetsManager.eatingBg,
-      AssetsManager.holidayBg,
-      AssetsManager.exhibitionBg,
-      AssetsManager.bookclubBg,
-      AssetsManager.workshopBg,
-    ];
-    category = eventModel.category!;
-    selectedTab = eventList.indexOf(category);
-    eventImage = eventImageList[selectedTab];
-    titleController.text = eventModel.title!;
-    descriptionController.text = eventModel.description!;
-    date = eventModel.date!;
-    time = eventModel.time!;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.white,
@@ -330,10 +341,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
       ),
     );
   }
-
   void onDatePicked(BuildContext context) async {
-    AppThemeProvider themeProvider =
-    Provider.of<AppThemeProvider>(context, listen: false);
+    AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
     DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -371,8 +380,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
     }
   }
   void onTimePicked(BuildContext context) async {
-    AppThemeProvider themeProvider =
-    Provider.of<AppThemeProvider>(context, listen: false);
+    AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
     TimeOfDay? selectedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
