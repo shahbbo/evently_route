@@ -1,5 +1,8 @@
+import 'package:cherry_toast/cherry_toast.dart';
+import 'package:cherry_toast/resources/arrays.dart';
 import 'package:event_planning_app/core/recources/app_colors.dart';
 import 'package:event_planning_app/features/edit_event_screen/presentation/pages/edit_event_screen.dart';
+import 'package:event_planning_app/features/home_screen/views/home_view/provider/home_provider.dart';
 import 'package:event_planning_app/features/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +11,10 @@ import '../../../create_event_screen/data/event_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventDetails extends StatelessWidget {
-  const EventDetails({super.key,});
+  const EventDetails({
+    super.key,
+  });
+
   static const String routeName = 'eventDetails';
 
   @override
@@ -17,6 +23,7 @@ class EventDetails extends StatelessWidget {
     var height = MediaQuery.of(context).size.height;
     AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context);
     bool isLight = themeProvider.appTheme == ThemeMode.light;
+    HomeProvider homeProvider = Provider.of<HomeProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -30,13 +37,33 @@ class EventDetails extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, EditEventScreen.routeName, arguments: eventModel);
+              Navigator.pushNamed(context, EditEventScreen.routeName,
+                  arguments: eventModel);
             },
-            icon: Icon(Icons.edit_note_outlined,color: AppColors.blue,size: 30,),
+            icon: Icon(
+              Icons.edit_note_outlined,
+              color: AppColors.blue,
+              size: 30,
+            ),
           ),
           IconButton(
-              onPressed: (){},
-              icon: Icon(Icons.delete_outlined,color: AppColors.red,)),
+              onPressed: () {
+                homeProvider.deleteEvent(eventModel.id!).then((onValue) {
+                  homeProvider.getAllEvents();
+                  CherryToast.success(
+                    title: Text('Event Deleted Successfully'),
+                    animationCurve: Curves.easeIn,
+                    animationDuration: Duration(milliseconds: 500),
+                    autoDismiss: true,
+                    animationType: AnimationType.fromTop,
+                  );
+                  Navigator.pop(context);
+                });
+              },
+              icon: Icon(
+                Icons.delete_outlined,
+                color: AppColors.red,
+              )),
         ],
       ),
       body: Padding(
@@ -58,9 +85,10 @@ class EventDetails extends StatelessWidget {
             SizedBox(
               height: height * .01,
             ),
-            Text(eventModel.title ?? '',style: AppStyle.primary20bold.copyWith(
-              color: AppColors.blue
-            ),),
+            Text(
+              eventModel.title ?? '',
+              style: AppStyle.primary20bold.copyWith(color: AppColors.blue),
+            ),
             SizedBox(
               height: height * .01,
             ),
@@ -82,18 +110,24 @@ class EventDetails extends StatelessWidget {
                         padding: EdgeInsets.all(5),
                         child: Icon(
                           Icons.calendar_month,
-                          color: isLight ? AppColors.white : AppColors.black,size: 35,)),
+                          color: isLight ? AppColors.white : AppColors.black,
+                          size: 35,
+                        )),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(eventModel.date ?? '',style: AppStyle.primary14bold.copyWith(
-                        color: AppColors.blue
-                      ),),
-                      Text(eventModel.time ?? '',style: AppStyle.primary14bold.copyWith(
-                        color: AppColors.blue
-                      ),),
+                      Text(
+                        eventModel.date ?? '',
+                        style: AppStyle.primary14bold
+                            .copyWith(color: AppColors.blue),
+                      ),
+                      Text(
+                        eventModel.time ?? '',
+                        style: AppStyle.primary14bold
+                            .copyWith(color: AppColors.blue),
+                      ),
                     ],
                   ),
                 ],
@@ -113,31 +147,41 @@ class EventDetails extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
-                      padding: EdgeInsets.all(5),
+                        padding: EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           color: AppColors.blue,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Icon(Icons.gps_fixed_outlined,color: isLight ? AppColors.white : AppColors.black,size: 35,)),
+                        child: Icon(
+                          Icons.gps_fixed_outlined,
+                          color: isLight ? AppColors.white : AppColors.black,
+                          size: 35,
+                        )),
                   ),
-                  Text('Cairo, Egypt',style: AppStyle.primary14bold.copyWith(
-                    color: AppColors.blue
-                  ),),
+                  Text(
+                    'Cairo, Egypt',
+                    style:
+                        AppStyle.primary14bold.copyWith(color: AppColors.blue),
+                  ),
                 ],
               ),
             ),
             SizedBox(
               height: height * .01,
             ),
-            Text('Description',style: AppStyle.primary20bold.copyWith(
-              color: isLight ? AppColors.black : AppColors.white
-            ),),
+            Text(
+              'Description',
+              style: AppStyle.primary20bold
+                  .copyWith(color: isLight ? AppColors.black : AppColors.white),
+            ),
             SizedBox(
               height: height * .005,
             ),
-            Text(eventModel.description ?? '',style: AppStyle.primary14bold.copyWith(
-              color: isLight ? AppColors.black : AppColors.white
-            ),),
+            Text(
+              eventModel.description ?? '',
+              style: AppStyle.primary14bold
+                  .copyWith(color: isLight ? AppColors.black : AppColors.white),
+            ),
           ],
         ),
       ),

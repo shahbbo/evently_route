@@ -54,7 +54,7 @@ class HomeProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-  void editEvent({
+  Future<void> editEvent({
     required String id,
     String? title,
     String? description,
@@ -63,7 +63,7 @@ class HomeProvider extends ChangeNotifier {
     String? image,
     String? category,
     bool? isFavorite,
-  }) {
+  }) async {
     print("Event id: $id");
     events.forEach((doc) {
       print("Document ID: ${doc.id}");
@@ -91,7 +91,7 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateEvent({required String id, required Map<String, dynamic> updatedData}) {
+  Future<void> updateEvent({required String id, required Map<String, dynamic> updatedData}) async {
     FireBaseFunctions.getEventsCollection().doc(id).get().then((doc) {
       if (doc.exists) {
         doc.reference.update(updatedData).then((_) {
@@ -107,6 +107,17 @@ class HomeProvider extends ChangeNotifier {
       print("Error fetching document: $e");
     });
 
+    notifyListeners();
+  }
+
+  Future<void> deleteEvent(String id) async {
+    print("Event id: $id");
+    FireBaseFunctions.getEventsCollection().doc(id).delete().then((value) {
+      print("Event deleted");
+      getAllEvents();
+    }).catchError((e) {
+      print("Error: $e");
+    });
     notifyListeners();
   }
 /*  void changeIndex(int index) {
