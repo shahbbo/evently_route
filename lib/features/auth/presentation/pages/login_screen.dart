@@ -2,7 +2,6 @@ import 'package:event_planning_app/features/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../core/recources/app_colors.dart';
 import '../../../../core/recources/app_styles.dart';
 import '../../../../core/recources/assets_manager.dart';

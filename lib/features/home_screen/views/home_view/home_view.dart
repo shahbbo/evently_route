@@ -117,6 +117,7 @@ class _HomeViewState extends State<HomeView> {
                           languageProvider.changeAppLanguage(
                               languageProvider.appLanguage == 'en' ? 'ar' : 'en');
                           CacheHelper.saveData(key: 'appLanguage', value: languageProvider.appLanguage == 'en' ? true : false);
+                          Provider.of<HomeProvider>(context,listen: false).getAllEvents();
                         },
                         child: Container(
                           padding: EdgeInsets.only(top: 3),
@@ -149,8 +150,8 @@ class _HomeViewState extends State<HomeView> {
                       child: TabBar(
                           onTap: (index){
                          setState(() {
-                           homeProvider.currentIndex=index;
-                           homeProvider.filterEvents(eventList[index]);
+                           homeProvider.currentIndex = index;
+                           homeProvider.filterEvents(context);
                          });
                        },
                           tabAlignment: TabAlignment.start,

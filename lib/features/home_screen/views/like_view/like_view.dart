@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/recources/app_colors.dart';
-import '../../../../core/recources/assets_manager.dart';
 import '../../../../core/reuseable_widgets/custom_text_form_feild.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../home_view/widgets/event_widget.dart';
 
 class LikeView extends StatelessWidget {
   const LikeView({super.key});

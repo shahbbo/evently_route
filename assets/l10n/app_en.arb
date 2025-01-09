@@ -59,6 +59,7 @@
     "letsStart": "Let’s Start",
     "pleaseEnterTitle": "Please enter title",
     "pleaseEnterDescription": "Please enter description",
-  "eventAdded": "Event Added Successfully"
+  "eventAdded": "Event Added Successfully",
+  "eventDetails": "Event Details"
 
 }

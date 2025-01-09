@@ -58,5 +58,6 @@
   "letsStart": "لنبدأ",
   "pleaseEnterTitle": "الرجاء إدخال العنوان",
     "pleaseEnterDescription": "الرجاء إدخال الوصف",
-  "eventAdded": "تمت اضافة الحدث بنجاح"
+  "eventAdded": "تمت اضافة الحدث بنجاح",
+  "eventDetails" : "تفاصيل الحدث"
 }
