@@ -1,3 +1,4 @@
+import 'package:event_planning_app/features/home_screen/views/home_view/provider/home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -97,9 +98,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(
-                  height: height * .02,
-                ),
+                SizedBox(height: height * .02,),
                 Container(
                   height: height * .25,
                   decoration: BoxDecoration(
@@ -123,6 +122,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                             category = selectedTab == 0
                                 ? eventList[0]
                                 : eventList[selectedTab];
+                            eventImage = eventImageList[selectedTab];
                           });
                         },
                         dividerColor: Colors.transparent,
@@ -185,8 +185,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                   controller: descriptionController,
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return AppLocalizations.of(context)!
-                          .pleaseEnterDescription;
+                      return AppLocalizations.of(context)!.pleaseEnterDescription;
                     }
                     return null;
                   },
@@ -328,7 +327,9 @@ class _EditEventScreenState extends State<EditEventScreen> {
                   height: height * .02,
                 ),
                 CustomButton(
-                  onTap: () {},
+                  onTap: () {
+                    updateEvent();
+                  },
                   buttonColor: AppColors.blue,
                   buttonName: AppLocalizations.of(context)!.editEvent,
                   textColor: AppColors.white,
@@ -415,6 +416,22 @@ class _EditEventScreenState extends State<EditEventScreen> {
           DateTime(2021, 1, 1, selectedTime.hour, selectedTime.minute),
         );
       });
+    }
+  }
+
+  void updateEvent() {
+    HomeProvider homeProvider = Provider.of<HomeProvider>(context, listen: false);
+    EventModel model = ModalRoute.of(context)!.settings.arguments as EventModel;
+    if (formKey.currentState!.validate()) {
+      Map<String, dynamic> updatedData = {};
+      if (category != model.category && category.isNotEmpty) updatedData['category'] = category;
+      if (titleController.text != model.title && titleController.text.isNotEmpty) updatedData['title'] = titleController.text;
+      if (descriptionController.text != model.description && descriptionController.text.isNotEmpty) updatedData['description'] = descriptionController.text;
+      if (date != model.date && date.isNotEmpty) updatedData['date'] = date;
+      if (time != model.time && time.isNotEmpty) updatedData['time'] = time;
+      if (eventImage != model.image && eventImage.isNotEmpty) updatedData['image'] = eventImage;
+      print("Updated data: $updatedData");
+      homeProvider.updateEvent(id: model.id ?? '', updatedData: updatedData);
     }
   }
 }
