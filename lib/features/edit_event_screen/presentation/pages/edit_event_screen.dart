@@ -14,10 +14,13 @@ import '../../../provider/theme_provider.dart';
 
 class EditEventScreen extends StatefulWidget {
   const EditEventScreen({super.key});
+
   static const String routeName = 'editEvent';
+
   @override
   State<EditEventScreen> createState() => _EditEventScreenState();
 }
+
 class _EditEventScreenState extends State<EditEventScreen> {
   List<String> eventList = [];
   int selectedTab = 0;
@@ -28,7 +31,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
   String time = '';
   String location = '';
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  late String eventImage;
+  String? eventImage;
   List<String> eventImageList = [
     AssetsManager.sportBg,
     AssetsManager.birthdayBg,
@@ -53,29 +56,45 @@ class _EditEventScreenState extends State<EditEventScreen> {
       AppLocalizations.of(context)!.work_shop,
     ];
   }
+  List<String> arEventList = [
+    'الرياضة',
+    'عيد ميلاد',
+    'اجتماع',
+    'العاب',
+    'الطعام',
+    'اجازة',
+    'هوايات'
+    'نادى القراءة',
+    'ورشة عمل',
+  ];
+  List<String> enEventList = [
+    'Sport',
+    'Birthday',
+    'Meeting',
+    'Gaming',
+    'Eating',
+    'Holiday',
+    'Exhibition',
+    'Book Club',
+    'Work Shop',
+  ];
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final EventModel eventModel = ModalRoute.of(context)!.settings.arguments as EventModel;
+      final EventModel eventModel =
+          ModalRoute.of(context)!.settings.arguments as EventModel;
+      getEventNameList(context);
       setState(() {
-        getEventNameList(context);
-        if (eventList.isEmpty) {
-          eventList = [
-            AppLocalizations.of(context)!.sport,
-            AppLocalizations.of(context)!.birthday,
-            AppLocalizations.of(context)!.meeting,
-            AppLocalizations.of(context)!.gaming,
-            AppLocalizations.of(context)!.eating,
-            AppLocalizations.of(context)!.holiday,
-            AppLocalizations.of(context)!.exhibition,
-            AppLocalizations.of(context)!.book_club,
-            AppLocalizations.of(context)!.work_shop,
-          ];
-        }
         category = eventModel.category ?? '';
-        selectedTab = eventList.indexOf(category);
-        eventImage = eventImageList[selectedTab];
+        if (category.isNotEmpty && arEventList.contains(category)) {
+          selectedTab = arEventList.indexOf(category);
+          eventImage = eventImageList[selectedTab];
+        } else if (category.isNotEmpty && enEventList.contains(category)) {
+          selectedTab = enEventList.indexOf(category);
+          eventImage = eventImageList[selectedTab];
+        }
         titleController.text = eventModel.title ?? '';
         descriptionController.text = eventModel.description ?? '';
         date = eventModel.date ?? '';
@@ -83,14 +102,12 @@ class _EditEventScreenState extends State<EditEventScreen> {
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context);
-    if (category.isEmpty) {
-      category = eventList[0];
-    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.white,
@@ -111,13 +128,15 @@ class _EditEventScreenState extends State<EditEventScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: height * .02,),
+                SizedBox(
+                  height: height * .02,
+                ),
                 Container(
                   height: height * .25,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     image: DecorationImage(
-                      image: AssetImage(eventImage),
+                      image: AssetImage(eventImage??''),
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -144,11 +163,11 @@ class _EditEventScreenState extends State<EditEventScreen> {
                         labelPadding: EdgeInsets.all(5),
                         tabs: eventList
                             .map((eventName) => TabEventWidget(
-                          tabName: eventName,
-                          isCreateEvent: true,
-                          selectedTab: selectedTab ==
-                              eventList.indexOf(eventName),
-                        ))
+                                  tabName: eventName,
+                                  isCreateEvent: true,
+                                  selectedTab: selectedTab ==
+                                      eventList.indexOf(eventName),
+                                ))
                             .toList())),
                 Text(
                   AppLocalizations.of(context)!.title,
@@ -198,7 +217,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
                   controller: descriptionController,
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return AppLocalizations.of(context)!.pleaseEnterDescription;
+                      return AppLocalizations.of(context)!
+                          .pleaseEnterDescription;
                     }
                     return null;
                   },
@@ -355,8 +375,10 @@ class _EditEventScreenState extends State<EditEventScreen> {
       ),
     );
   }
+
   void onDatePicked(BuildContext context) async {
-    AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
+    AppThemeProvider themeProvider =
+        Provider.of<AppThemeProvider>(context, listen: false);
     DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -366,23 +388,23 @@ class _EditEventScreenState extends State<EditEventScreen> {
         return Theme(
           data: themeProvider.appTheme == ThemeMode.light
               ? ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColors.blue,
-              onPrimary: AppColors.black,
-              surface: AppColors.white,
-              onSurface: AppColors.black,
-            ),
-            dialogBackgroundColor: AppColors.white,
-          )
+                  colorScheme: ColorScheme.light(
+                    primary: AppColors.blue,
+                    onPrimary: AppColors.black,
+                    surface: AppColors.white,
+                    onSurface: AppColors.black,
+                  ),
+                  dialogBackgroundColor: AppColors.white,
+                )
               : ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.dark(
-              primary: AppColors.blue,
-              onPrimary: AppColors.black,
-              surface: AppColors.primaryColorDark,
-              onSurface: AppColors.white,
-            ),
-            dialogBackgroundColor: AppColors.white,
-          ),
+                  colorScheme: ColorScheme.dark(
+                    primary: AppColors.blue,
+                    onPrimary: AppColors.black,
+                    surface: AppColors.primaryColorDark,
+                    onSurface: AppColors.white,
+                  ),
+                  dialogBackgroundColor: AppColors.white,
+                ),
           child: child!,
         );
       },
@@ -393,8 +415,10 @@ class _EditEventScreenState extends State<EditEventScreen> {
       });
     }
   }
+
   void onTimePicked(BuildContext context) async {
-    AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
+    AppThemeProvider themeProvider =
+        Provider.of<AppThemeProvider>(context, listen: false);
     TimeOfDay? selectedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
@@ -402,23 +426,23 @@ class _EditEventScreenState extends State<EditEventScreen> {
         return Theme(
           data: themeProvider.appTheme == ThemeMode.light
               ? ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColors.blue,
-              onPrimary: AppColors.black,
-              surface: AppColors.white,
-              onSurface: AppColors.black,
-            ),
-            dialogBackgroundColor: AppColors.white,
-          )
+                  colorScheme: ColorScheme.light(
+                    primary: AppColors.blue,
+                    onPrimary: AppColors.black,
+                    surface: AppColors.white,
+                    onSurface: AppColors.black,
+                  ),
+                  dialogBackgroundColor: AppColors.white,
+                )
               : ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.dark(
-              primary: AppColors.blue,
-              onPrimary: AppColors.black,
-              surface: AppColors.primaryColorDark,
-              onSurface: AppColors.white,
-            ),
-            dialogBackgroundColor: AppColors.white,
-          ),
+                  colorScheme: ColorScheme.dark(
+                    primary: AppColors.blue,
+                    onPrimary: AppColors.black,
+                    surface: AppColors.primaryColorDark,
+                    onSurface: AppColors.white,
+                  ),
+                  dialogBackgroundColor: AppColors.white,
+                ),
           child: child!,
         );
       },
@@ -433,7 +457,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
   }
 
   void updateEvent() {
-    HomeProvider homeProvider = Provider.of<HomeProvider>(context, listen: false);
+    HomeProvider homeProvider =
+        Provider.of<HomeProvider>(context, listen: false);
     EventModel model = ModalRoute.of(context)!.settings.arguments as EventModel;
     if (formKey.currentState!.validate()) {
       Map<String, dynamic> updatedData = {};
@@ -442,19 +467,21 @@ class _EditEventScreenState extends State<EditEventScreen> {
       if (descriptionController.text != model.description && descriptionController.text.isNotEmpty) updatedData['description'] = descriptionController.text;
       if (date != model.date && date.isNotEmpty) updatedData['date'] = date;
       if (time != model.time && time.isNotEmpty) updatedData['time'] = time;
-      if (eventImage != model.image && eventImage.isNotEmpty) updatedData['image'] = eventImage;
+      if (eventImage != model.image && eventImage != null) updatedData['image'] = eventImage;
       print("Updated data: $updatedData");
       // homeProvider.updateEvent(id: model.id ?? '', updatedData: updatedData);
-      homeProvider.updateEventWithCheck(id: model.id ?? '', updatedData: EventModel(
-        id: model.id,
-        title: titleController.text,
-        description: descriptionController.text,
-        date: date,
-        time: time,
-        category: category,
-        image: eventImage,
-        isFavorite: model.isFavorite,
-      ).toJson());
+      homeProvider.updateEventWithCheck(
+          id: model.id ?? '',
+          updatedData: EventModel(
+            id: model.id,
+            title: titleController.text,
+            description: descriptionController.text,
+            date: date,
+            time: time,
+            category: category,
+            image: eventImage,
+            isFavorite: model.isFavorite,
+          ).toJson());
     }
   }
 }

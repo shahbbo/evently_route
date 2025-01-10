@@ -14,9 +14,7 @@ class EventDetails extends StatelessWidget {
   const EventDetails({
     super.key,
   });
-
   static const String routeName = 'eventDetails';
-
   @override
   Widget build(BuildContext context) {
     final EventModel eventModel = ModalRoute.of(context)!.settings.arguments as EventModel;
