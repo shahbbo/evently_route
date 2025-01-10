@@ -35,9 +35,7 @@ class HomeProvider extends ChangeNotifier {
       print("Error: $e");
     });
   }
-
   List<EventModel> filteredEvents = [];
-
   Future<void> filterEvents(BuildContext context) async {
     if (eventList.isEmpty) {
       getEventNameList(context);
@@ -82,9 +80,9 @@ class HomeProvider extends ChangeNotifier {
         .update(
           updatedData,
         )
-        .then((value) {
+        .then((value) async {
       print("Event updated");
-      getAllEvents();
+     await getAllEvents();
     }).catchError((e) {
       print("Error: $e");
     });
@@ -94,9 +92,9 @@ class HomeProvider extends ChangeNotifier {
   Future<void> updateEvent({required String id, required Map<String, dynamic> updatedData}) async {
     FireBaseFunctions.getEventsCollection().doc(id).get().then((doc) {
       if (doc.exists) {
-        doc.reference.update(updatedData).then((_) {
+        doc.reference.update(updatedData).then((_) async {
           print("Document updated successfully");
-          getAllEvents();
+          await getAllEvents();
         }).catchError((e) {
           print("Error updating document: $e");
         });
@@ -106,15 +104,14 @@ class HomeProvider extends ChangeNotifier {
     }).catchError((e) {
       print("Error fetching document: $e");
     });
-
     notifyListeners();
   }
 
   Future<void> deleteEvent(String id) async {
     print("Event id: $id");
-    FireBaseFunctions.getEventsCollection().doc(id).delete().then((value) {
+    FireBaseFunctions.getEventsCollection().doc(id).delete().then((value) async {
       print("Event deleted");
-      getAllEvents();
+      await getAllEvents();
     }).catchError((e) {
       print("Error: $e");
     });
