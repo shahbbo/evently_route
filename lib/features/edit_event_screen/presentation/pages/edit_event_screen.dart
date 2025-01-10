@@ -60,9 +60,22 @@ class _EditEventScreenState extends State<EditEventScreen> {
       final EventModel eventModel = ModalRoute.of(context)!.settings.arguments as EventModel;
       setState(() {
         getEventNameList(context);
+        if (eventList.isEmpty) {
+          eventList = [
+            AppLocalizations.of(context)!.sport,
+            AppLocalizations.of(context)!.birthday,
+            AppLocalizations.of(context)!.meeting,
+            AppLocalizations.of(context)!.gaming,
+            AppLocalizations.of(context)!.eating,
+            AppLocalizations.of(context)!.holiday,
+            AppLocalizations.of(context)!.exhibition,
+            AppLocalizations.of(context)!.book_club,
+            AppLocalizations.of(context)!.work_shop,
+          ];
+        }
         category = eventModel.category ?? '';
-        selectedTab = eventList.indexOf(category);
-        eventImage = eventImageList[selectedTab];
+        selectedTab = 1;
+        eventImage = eventImageList[1];
         titleController.text = eventModel.title ?? '';
         descriptionController.text = eventModel.description ?? '';
         date = eventModel.date ?? '';
@@ -431,7 +444,17 @@ class _EditEventScreenState extends State<EditEventScreen> {
       if (time != model.time && time.isNotEmpty) updatedData['time'] = time;
       if (eventImage != model.image && eventImage.isNotEmpty) updatedData['image'] = eventImage;
       print("Updated data: $updatedData");
-      homeProvider.updateEvent(id: model.id ?? '', updatedData: updatedData);
+      // homeProvider.updateEvent(id: model.id ?? '', updatedData: updatedData);
+      homeProvider.updateEventWithCheck(id: model.id ?? '', updatedData: EventModel(
+        id: model.id,
+        title: titleController.text,
+        description: descriptionController.text,
+        date: date,
+        time: time,
+        category: category,
+        image: eventImage,
+        isFavorite: model.isFavorite,
+      ).toJson());
     }
   }
 }

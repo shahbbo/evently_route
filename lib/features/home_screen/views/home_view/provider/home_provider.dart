@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_planning_app/features/create_event_screen/data/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -6,6 +7,7 @@ import '../../../../fire_base/firebase_func.dart';
 class HomeProvider extends ChangeNotifier {
   int currentIndex = 0;
   List<String> eventList = [];
+
   void getEventNameList(BuildContext context) {
     eventList = [
       AppLocalizations.of(context)!.all,
@@ -20,7 +22,9 @@ class HomeProvider extends ChangeNotifier {
       AppLocalizations.of(context)!.work_shop,
     ];
   }
+
   List<EventModel> events = [];
+
   Future<void> getAllEvents() async {
     FireBaseFunctions.getEventsCollection().get().then((value) {
       events = value.docs.map((doc) => doc.data()).toList();
@@ -32,7 +36,9 @@ class HomeProvider extends ChangeNotifier {
       print("Error: $e");
     });
   }
+
   List<EventModel> filteredEvents = [];
+
   Future<void> filterEvents(BuildContext context) async {
     if (eventList.isEmpty) getEventNameList(context);
     if (currentIndex == 0) {
@@ -48,13 +54,12 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   // fav section
   void updateFavoriteEvents(EventModel event) async {
     FireBaseFunctions.getEventsCollection()
         .doc(event.id)
         .update({'isFavorite': !event.isFavorite!}).timeout(
-        Duration(milliseconds: 500), onTimeout: () {
+            Duration(milliseconds: 500), onTimeout: () {
       print('Event added to Favorite');
     }).onError((error, stackTrace) {
       print('Error : $error');
@@ -62,19 +67,21 @@ class HomeProvider extends ChangeNotifier {
     getFavoriteEvents();
     notifyListeners();
   }
+
   List<EventModel> favoriteEvents = [];
+
   void getFavoriteEvents() async {
     await FireBaseFunctions.getEventsCollection()
         .where('isFavorite', isEqualTo: true)
-        .get().then((onValue) {
+        .get()
+        .then((onValue) {
       favoriteEvents = onValue.docs.map((doc) => doc.data()).toList();
-        }).catchError((e) {
+    }).catchError((e) {
       print("Error: $e");
-        });
+    });
     print("Favorite events: $favoriteEvents");
     notifyListeners();
   }
-
 
   /*
   // edit section
@@ -109,13 +116,15 @@ class HomeProvider extends ChangeNotifier {
         )
         .then((value) async {
       print("Event updated");
-     await getAllEvents();
+      await getAllEvents();
     }).catchError((e) {
       print("Error: $e");
     });
     notifyListeners();
   }
-  Future<void> updateEvent({required String id, required Map<String, dynamic> updatedData}) async {
+
+  Future<void> updateEvent(
+      {required String id, required Map<String, dynamic> updatedData}) async {
     FireBaseFunctions.getEventsCollection().doc(id).get().then((doc) {
       if (doc.exists) {
         doc.reference.update(updatedData).then((_) async {
@@ -133,12 +142,53 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateEventWithCheck(
+      {required String id, required Map<String, dynamic> updatedData}) async {
+    try {
+      // الحصول على المستند باستخدام id
+      var doc = await FirebaseFirestore.instance
+          .collection(EventModel.collectionName)
+          .doc(id)
+          .get().then((value) {
+        print("Document: ${value.data()}");
+      }).catchError((e) {
+        print("Error: $e");
+      });
+      if (doc.exists) {
+        // إذا كان المستند موجودًا، نقوم بتحديثه
+        await FirebaseFirestore.instance
+            .collection(EventModel.collectionName)
+            .doc(id)
+            .update(updatedData).then((_) async {
+          print("Document updated successfully");
+        }).catchError((e) {
+          print("Error updating document: $e");
+        });
+      } else {
+        // إذا لم يكن المستند موجودًا، نقوم بإنشائه
+        await FirebaseFirestore.instance
+            .collection(EventModel.collectionName)
+            .doc(id)
+            .set(updatedData);
+        print("Document created successfully");
+      }
+      // جلب الأحداث بعد التحديث أو الإنشاء
+      await getAllEvents();
+    } catch (e) {
+      print("Error: $e");
+    }
+    // استدعاء notifyListeners بعد التحديث أو الإنشاء
+    notifyListeners();
+  }
 
 
   // delete section
   Future<void> deleteEvent(String id) async {
     print("Event id: $id");
-    FireBaseFunctions.getEventsCollection().doc(id).delete().then((value) async {
+    FireBaseFunctions.getEventsCollection()
+        .doc(id)
+        .delete()
+        .then((value) async {
       print("Event deleted");
       await getAllEvents();
     }).catchError((e) {
