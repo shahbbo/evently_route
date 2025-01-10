@@ -74,8 +74,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
           ];
         }
         category = eventModel.category ?? '';
-        selectedTab = 1;
-        eventImage = eventImageList[1];
+        selectedTab = eventList.indexOf(category);
+        eventImage = eventImageList[selectedTab];
         titleController.text = eventModel.title ?? '';
         descriptionController.text = eventModel.description ?? '';
         date = eventModel.date ?? '';
