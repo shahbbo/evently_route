@@ -104,6 +104,7 @@ class _EventWidgetState extends State<EventWidget> {
                         print("Is fav after: $isFav");
                         widget.eventModel.isFavorite = isFav;
                         print("Event model after: ${widget.eventModel.toJson()}");
+                        homeProvider.updateFavoriteEvents(widget.eventModel);
                         homeProvider.updateEvent(
                             id: widget.eventModel.id ?? '',
                             updatedData: {

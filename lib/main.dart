@@ -33,11 +33,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // await FirebaseFirestore.instance.disableNetwork();
+  await FirebaseFirestore.instance.disableNetwork();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => AppLanguageProvider()..loadLanguageFromCache()),
     ChangeNotifierProvider(create: (context) => AppThemeProvider()..loadThemeFromCache()),
-    ChangeNotifierProvider(create: (context) => HomeProvider()..getAllEvents()),
+    ChangeNotifierProvider(create: (context) => HomeProvider()..getAllEvents()..getFavoriteEvents()),
   ], child: MyApp(initialRoute: initialRoute)));
 }
 

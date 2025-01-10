@@ -6,7 +6,6 @@ import '../../../../fire_base/firebase_func.dart';
 class HomeProvider extends ChangeNotifier {
   int currentIndex = 0;
   List<String> eventList = [];
-
   void getEventNameList(BuildContext context) {
     eventList = [
       AppLocalizations.of(context)!.all,
@@ -21,9 +20,7 @@ class HomeProvider extends ChangeNotifier {
       AppLocalizations.of(context)!.work_shop,
     ];
   }
-
   List<EventModel> events = [];
-
   Future<void> getAllEvents() async {
     FireBaseFunctions.getEventsCollection().get().then((value) {
       events = value.docs.map((doc) => doc.data()).toList();
@@ -37,9 +34,7 @@ class HomeProvider extends ChangeNotifier {
   }
   List<EventModel> filteredEvents = [];
   Future<void> filterEvents(BuildContext context) async {
-    if (eventList.isEmpty) {
-      getEventNameList(context);
-    }
+    if (eventList.isEmpty) getEventNameList(context);
     if (currentIndex == 0) {
       filteredEvents = events;
       print("All events: $filteredEvents");
@@ -52,6 +47,38 @@ class HomeProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+
+  // fav section
+  void updateFavoriteEvents(EventModel event) async {
+    FireBaseFunctions.getEventsCollection()
+        .doc(event.id)
+        .update({'isFavorite': !event.isFavorite!}).timeout(
+        Duration(milliseconds: 500), onTimeout: () {
+      print('Event added to Favorite');
+    }).onError((error, stackTrace) {
+      print('Error : $error');
+    });
+    getFavoriteEvents();
+    notifyListeners();
+  }
+  List<EventModel> favoriteEvents = [];
+  void getFavoriteEvents() async {
+    await FireBaseFunctions.getEventsCollection()
+        .where('isFavorite', isEqualTo: true)
+        .get().then((onValue) {
+      favoriteEvents = onValue.docs.map((doc) => doc.data()).toList();
+        }).catchError((e) {
+      print("Error: $e");
+        });
+    print("Favorite events: $favoriteEvents");
+    notifyListeners();
+  }
+
+
+  /*
+  // edit section
+  */
   Future<void> editEvent({
     required String id,
     String? title,
@@ -63,9 +90,9 @@ class HomeProvider extends ChangeNotifier {
     bool? isFavorite,
   }) async {
     print("Event id: $id");
-    events.forEach((doc) {
+    for (var doc in events) {
       print("Document ID: ${doc.id}");
-    });
+    }
     Map<String, dynamic> updatedData = {};
     if (title != null) updatedData['title'] = title;
     if (date != null) updatedData['date'] = date;
@@ -88,7 +115,6 @@ class HomeProvider extends ChangeNotifier {
     });
     notifyListeners();
   }
-
   Future<void> updateEvent({required String id, required Map<String, dynamic> updatedData}) async {
     FireBaseFunctions.getEventsCollection().doc(id).get().then((doc) {
       if (doc.exists) {
@@ -107,6 +133,9 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
+
+  // delete section
   Future<void> deleteEvent(String id) async {
     print("Event id: $id");
     FireBaseFunctions.getEventsCollection().doc(id).delete().then((value) async {
