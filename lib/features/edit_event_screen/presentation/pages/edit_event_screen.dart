@@ -1,3 +1,4 @@
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:event_planning_app/features/home_screen/views/home_view/provider/home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -119,7 +120,9 @@ class _EditEventScreenState extends State<EditEventScreen> {
         centerTitle: true,
         iconTheme: IconThemeData(color: AppColors.blue),
       ),
-      body: Form(
+      body: Consumer<HomeProvider>(
+  builder: (context, provider, child) {
+  return Form(
         key: formKey,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -372,7 +375,9 @@ class _EditEventScreenState extends State<EditEventScreen> {
             ),
           ),
         ),
-      ),
+      );
+  },
+),
     );
   }
 
@@ -415,7 +420,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
       });
     }
   }
-
   void onTimePicked() async {
     AppThemeProvider themeProvider =
         Provider.of<AppThemeProvider>(context, listen: false);
@@ -455,10 +459,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
       });
     }
   }
-
-  void updateEvent() {
-    HomeProvider homeProvider =
-        Provider.of<HomeProvider>(context, listen: false);
+  Future<void> updateEvent() async {
+    HomeProvider homeProvider = Provider.of<HomeProvider>(context, listen: false);
     EventModel model = ModalRoute.of(context)!.settings.arguments as EventModel;
     if (formKey.currentState!.validate()) {
       Map<String, dynamic> updatedData = {};
@@ -469,19 +471,16 @@ class _EditEventScreenState extends State<EditEventScreen> {
       if (time != model.time && time.isNotEmpty) updatedData['time'] = time;
       if (eventImage != model.image && eventImage != null) updatedData['image'] = eventImage;
       print("Updated data: $updatedData");
-      // homeProvider.updateEvent(id: model.id ?? '', updatedData: updatedData);
-      homeProvider.updateEventWithCheck(
-          id: model.id ?? '',
-          updatedData: EventModel(
-            id: model.id,
-            title: titleController.text,
-            description: descriptionController.text,
-            date: date,
-            time: time,
-            category: category,
-            image: eventImage,
-            isFavorite: model.isFavorite,
-          ).toJson());
+      await homeProvider.updateEvent(id: model.id ?? '', updatedData: updatedData).then((value) {
+        homeProvider.getFavoriteEvents();
+        homeProvider.getAllEvents();
+        CherryToast.success(
+          title: Text(AppLocalizations.of(context)!.eventUpdated),
+          animationCurve: Curves.easeInOut,
+          animationDuration: Duration(milliseconds: 600),
+        ).show(context);
+      });
+      Navigator.pop(context);
     }
   }
 }

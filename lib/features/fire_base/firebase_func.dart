@@ -14,19 +14,9 @@ class FireBaseFunctions {
     event.id = docRef.id;
     return docRef.set(event);
   }
-  static void addEventObject(){
-    FirebaseFirestore.instance.collection(EventModel.collectionName)
-        .withConverter(
-        fromFirestore: (snapshots, _) => EventModel.fromJson(snapshots.data()!),
-        toFirestore: (eventModel, _) => eventModel.toJson());
-  }
   static Future<void> addEvent1(EventModel event) {
-    event.id = getEventsCollection().doc().id;
-    return getEventsCollection().doc().set(event);
+    var docRef = getEventsCollection().doc();
+    event.id = docRef.id;
+    return docRef.set(event);
   }
-/* static void getEvents() {
-    FirebaseFirestore.instance.collection(EventModel.collectionName).get().then((value) {
-      value.docs.forEach((element) {});
-    });
-  } */
 }

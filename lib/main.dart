@@ -34,13 +34,14 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseFirestore.instance.disableNetwork();
+  // await FirebaseFirestore.instance.disableNetwork();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => AuthProvider()),
     ChangeNotifierProvider(create: (context) => AppLanguageProvider()..loadLanguageFromCache()),
     ChangeNotifierProvider(create: (context) => AppThemeProvider()..loadThemeFromCache()),
     ChangeNotifierProvider(create: (context) => HomeProvider()..getAllEvents()..getFavoriteEvents()),
-  ], child: MyApp(initialRoute: initialRoute)));
+  ], child: MyApp(initialRoute: initialRoute),
+));
 }
 class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.initialRoute});

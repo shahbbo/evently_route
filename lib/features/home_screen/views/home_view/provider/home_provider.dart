@@ -24,10 +24,10 @@ class HomeProvider extends ChangeNotifier {
   }
 
   List<EventModel> events = [];
-
   Future<void> getAllEvents() async {
     FireBaseFunctions.getEventsCollection().get().then((value) {
       events = value.docs.map((doc) => doc.data()).toList();
+      print("Documents fetched: ${value.docs.length}");
       if (currentIndex == 0) {
         filteredEvents = events;
       }
@@ -117,6 +117,7 @@ class HomeProvider extends ChangeNotifier {
         .then((value) async {
       print("Event updated");
       await getAllEvents();
+      notifyListeners();
     }).catchError((e) {
       print("Error: $e");
     });

@@ -69,5 +69,6 @@
     "email_invalid" : "الايميل غير صحيح",
     "email_exist" : "الايميل موجود بالفعل",
     "login_failed" : "فشل تسجيل الدخول",
-    "register_failed" : "فشل التسجيل"
+    "register_failed" : "فشل التسجيل",
+  "eventUpdated" : "تم تحديث الحدث بنجاح"
 }

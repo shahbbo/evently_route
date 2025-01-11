@@ -70,6 +70,7 @@
   "email_invalid": "Email is invalid",
   "email_exist": "Email already exist",
   "login_failed": "Login Failed",
-    "register_failed": "Register Failed"
+    "register_failed": "Register Failed",
+  "eventUpdated": "Event Updated Successfully"
 
 }

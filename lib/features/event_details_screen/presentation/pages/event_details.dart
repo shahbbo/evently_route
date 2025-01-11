@@ -64,7 +64,9 @@ class EventDetails extends StatelessWidget {
               )),
         ],
       ),
-      body: Padding(
+      body: Consumer<HomeProvider>(
+  builder: (context, provider, child) {
+  return Padding(
         padding: const EdgeInsets.all(14.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -182,7 +184,9 @@ class EventDetails extends StatelessWidget {
             ),
           ],
         ),
-      ),
+      );
+  },
+),
     );
   }
 }

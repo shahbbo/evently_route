@@ -54,6 +54,17 @@ class _CreateEventState extends State<CreateEvent> {
       AppLocalizations.of(context)!.book_club,
       AppLocalizations.of(context)!.work_shop,
     ];
+    List<String> enEventList = [
+      'Sport',
+      'Birthday',
+      'Meeting',
+      'Gaming',
+      'Eating',
+      'Holiday',
+      'Exhibition',
+      'Book Club',
+      'Work Shop',
+    ];
     if (category.isEmpty) {
       category = eventList[0];
     }
@@ -113,8 +124,8 @@ class _CreateEventState extends State<CreateEvent> {
                           setState(() {
                             selectedTab = index;
                             category = selectedTab == 0
-                                ? eventList[0]
-                                : eventList[selectedTab];
+                                ? enEventList[0]
+                                : enEventList[selectedTab];
                           });
                         },
                         dividerColor: Colors.transparent,

@@ -72,6 +72,24 @@ class AuthProvider extends ChangeNotifier {
     return null;
   }
 
+  Future<User?> signInWithGoogle() async {
+    try {
+      GoogleAuthProvider googleProvider = GoogleAuthProvider();
+      UserCredential userCredential = await auth.signInWithPopup(googleProvider);
+      return userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('----------------------------------------------');
+        print('No user found for that email.');
+        print('----------------------------------------------');
+      } else if (e.code == 'wrong-password') {
+        print('----------------------------------------------');
+        print('Wrong password.');
+        print('----------------------------------------------');
+      }
+    }
+    return null;
+  }
 
 
 // FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
