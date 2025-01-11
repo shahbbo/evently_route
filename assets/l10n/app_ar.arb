@@ -60,5 +60,14 @@
     "pleaseEnterDescription": "الرجاء إدخال الوصف",
   "eventAdded": "تمت اضافة الحدث بنجاح",
   "eventDetails" : "تفاصيل الحدث",
-  "editEvent" : "تعديل الحدث"
+  "editEvent" : "تعديل الحدث",
+  "name_required" : "الاسم مطلوب",
+  "email_required" : "الايميل مطلوب",
+    "password_required" : "كلمة المرور مطلوبة",
+    "password_length" : "كلمة المرور يجب ان تكون اكثر من 6 حروف",
+    "password_not_match" : "كلمة المرور غير متطابقة",
+    "email_invalid" : "الايميل غير صحيح",
+    "email_exist" : "الايميل موجود بالفعل",
+    "login_failed" : "فشل تسجيل الدخول",
+    "register_failed" : "فشل التسجيل"
 }

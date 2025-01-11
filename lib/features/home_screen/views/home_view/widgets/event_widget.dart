@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../core/recources/app_colors.dart';
 import '../../../../../core/recources/app_styles.dart';
-import '../../../../fire_base/firebase_func.dart';
 
 class EventWidget extends StatefulWidget {
 
@@ -30,7 +29,9 @@ class _EventWidgetState extends State<EventWidget> {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, EventDetails.routeName, arguments: widget.eventModel);
-      },
+        print(widget.eventModel.date?.substring(0,2));
+        print(widget.eventModel.date?.substring(2,5));
+        },
       child: Container(
         padding: EdgeInsets.all(5),
         margin: EdgeInsets.all(5),
@@ -62,7 +63,7 @@ class _EventWidgetState extends State<EventWidget> {
                     style: AppStyle.primary20bold,
                   ),
                   Text(
-                    widget.eventModel.date?.substring(2,5) ?? '',
+                    widget.eventModel.date?.substring(3,6) ?? '',
                     textAlign: TextAlign.center,
                     style: AppStyle.primary14bold,
                   ),

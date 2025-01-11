@@ -1,3 +1,4 @@
+import 'package:event_planning_app/features/auth/presentation/provider/auth_provider/auth_provider.dart';
 import 'package:event_planning_app/features/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -23,10 +24,18 @@ class CreateAccount extends StatefulWidget {
 bool obscureText = true;
 
 class _CreateAccountState extends State<CreateAccount> {
+
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController rePasswordController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.transparent,
@@ -38,119 +47,157 @@ class _CreateAccountState extends State<CreateAccount> {
         iconTheme: IconThemeData(color: AppColors.black),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16,right: 16),
-          child: Column(
-            children: [
-              SizedBox(
-                height: height * .05,
-              ),
-              Image(image: AssetImage(AssetsManager.logo)),
-              SizedBox(
-                height: height * .01,
-              ),
-              CustomTextFormField(
-                borderColor: AppColors.gray,
-                hintText: AppLocalizations.of(context)!.name,
-                controller: null,
-                prefixIcon: Icon(Icons.person,
-                  color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
+        child: Form(
+          key: formKey,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16,right: 16),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: height * .05,
                 ),
-              ),
-              SizedBox(
-                height: height * .01,
-              ),
-              CustomTextFormField(
-                borderColor: AppColors.gray,
-                hintText: AppLocalizations.of(context)!.email,
-                controller: null,
-                prefixIcon: Icon(Icons.email,
-                  color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
+                Image(image: AssetImage(AssetsManager.logo)),
+                SizedBox(
+                  height: height * .01,
                 ),
-              ),
-              SizedBox(
-                height: height * .015,
-              ),
-              CustomTextFormField(
-                borderColor: AppColors.gray,
-                hintText: AppLocalizations.of(context)!.password,
-                prefixIcon: Icon(Icons.lock,
-                  color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
-                ),
-                obscureText: obscureText,
-                suffixIcon: IconButton(icon: obscureText ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
-                  color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
-                  onPressed: () {
-                    setState(() {
-                      obscureText = !obscureText;
-                    });
-                  },),
-          
-              ),
-              SizedBox(
-                height: height * .015,
-              ),
-              CustomTextFormField(
-                borderColor: AppColors.gray,
-                hintText: AppLocalizations.of(context)!.re_password,
-                prefixIcon: Icon(Icons.lock,
-                  color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
-                ),
-                obscureText: obscureText,
-                suffixIcon: IconButton(icon: obscureText ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
-                  color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
-                  onPressed: () {
-                    setState(() {
-                      obscureText = !obscureText;
-                    });
-                  },),
-              ),
-              SizedBox(
-                height: height * .015,
-              ),
-              CustomButton(
-                onTap: (){
-                  Navigator.pushReplacementNamed(context, HomeScreen.routeName);
-                },
-                buttonColor: AppColors.primaryColorLight,
-                buttonName: AppLocalizations.of(context)!.create_account,
-                textColor: AppColors.white,
-                borderColor: AppColors.primaryColorLight,
-              ),
-              SizedBox(
-                height: height * .015,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(AppLocalizations.of(context)!.have_Account,
-                      style: AppStyle.black16medium.copyWith(
-                        color: themeProvider.appTheme == ThemeMode.light ? AppColors.black : AppColors.white,
-                      )),
-                  SizedBox(
-                    width: 10,
+                CustomTextFormField(
+                  borderColor: AppColors.gray,
+                  hintText: AppLocalizations.of(context)!.name,
+                  controller: nameController,
+                  prefixIcon: Icon(Icons.person,
+                    color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
                   ),
-                  InkWell(
-                    onTap: (){
-                      Navigator.pushNamed(context, LoginScreen.routeName);
+                  validator: (value){
+                    if(value!.isEmpty){
+                      return AppLocalizations.of(context)!.name_required;
+                    }
+                  },
+                ),
+                SizedBox(
+                  height: height * .01,
+                ),
+                CustomTextFormField(
+                  borderColor: AppColors.gray,
+                  hintText: AppLocalizations.of(context)!.email,
+                  controller: emailController,
+                  prefixIcon: Icon(Icons.email,
+                    color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
+                  ),
+                  validator: (value){
+                    if(value!.isEmpty){
+                      return AppLocalizations.of(context)!.email_required;
+                    }
+                  },
+                ),
+                SizedBox(
+                  height: height * .015,
+                ),
+                CustomTextFormField(
+                  controller: passwordController,
+                  borderColor: AppColors.gray,
+                  hintText: AppLocalizations.of(context)!.password,
+                  prefixIcon: Icon(Icons.lock,
+                    color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
+                  ),
+                  obscureText: obscureText,
+                  suffixIcon: IconButton(icon: obscureText ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+                    color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
+                    onPressed: () {
+                      setState(() {
+                        obscureText = !obscureText;
+                      });
+                    },),
+                  validator: (value){
+                    if(value!.isEmpty){
+                      return AppLocalizations.of(context)!.password_required;
+                    }else if(value.length < 6){
+                      return AppLocalizations.of(context)!.password_length;
+                    }else if (rePasswordController.text != passwordController.text){
+                      return AppLocalizations.of(context)!.password_not_match;
+                    }
                     },
-                    child: Text(
-                      AppLocalizations.of(context)!.login,
-                      style: AppStyle.primary14bold.copyWith(
-                        fontStyle: FontStyle.italic,
-                        decoration: TextDecoration.underline,
-                        decorationColor: AppColors.primaryColorLight,
-                        decorationThickness: 2,
+                ),
+                SizedBox(
+                  height: height * .015,
+                ),
+                CustomTextFormField(
+                  controller: rePasswordController,
+                  borderColor: AppColors.gray,
+                  hintText: AppLocalizations.of(context)!.re_password,
+                  prefixIcon: Icon(Icons.lock,
+                    color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
+                  ),
+                  obscureText: obscureText,
+                  suffixIcon: IconButton(icon: obscureText ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+                    color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
+                    onPressed: () {
+                      setState(() {
+                        obscureText = !obscureText;
+                      });
+                    },),
+                  validator: (value){
+                    if(value!.isEmpty){
+                      return AppLocalizations.of(context)!.password_required;
+                    }else if(value.length < 6){
+                      return AppLocalizations.of(context)!.password_length;
+                    }else if (rePasswordController.text != passwordController.text){
+                      return AppLocalizations.of(context)!.password_not_match;
+                    }
+                  },
+                ),
+                SizedBox(
+                  height: height * .015,
+                ),
+                CustomButton(
+                  onTap: (){
+                    if(formKey.currentState!.validate()){
+                      authProvider.signUp1(emailController.text, passwordController.text, nameController.text).then((value) {
+                        if(value != null){
+                          Navigator.pushNamed(context, HomeScreen.routeName);
+                        }
+                      });
+                    }
+                  },
+                  buttonColor: AppColors.primaryColorLight,
+                  buttonName: AppLocalizations.of(context)!.create_account,
+                  textColor: AppColors.white,
+                  borderColor: AppColors.primaryColorLight,
+                ),
+                SizedBox(
+                  height: height * .015,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(AppLocalizations.of(context)!.have_Account,
+                        style: AppStyle.black16medium.copyWith(
+                          color: themeProvider.appTheme == ThemeMode.light ? AppColors.black : AppColors.white,
+                        )),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    InkWell(
+                      onTap: (){
+                        Navigator.pushNamed(context, LoginScreen.routeName);
+                      },
+                      child: Text(
+                        AppLocalizations.of(context)!.login,
+                        style: AppStyle.primary14bold.copyWith(
+                          fontStyle: FontStyle.italic,
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColors.primaryColorLight,
+                          decorationThickness: 2,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: height * .04,
-              ),
-              LanguageSwitcher(),
-            ],
+                  ],
+                ),
+                SizedBox(
+                  height: height * .04,
+                ),
+                LanguageSwitcher(),
+              ],
+            ),
           ),
         ),
       ),

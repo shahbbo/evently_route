@@ -252,7 +252,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                     ),
                     Spacer(),
                     TextButton(
-                        onPressed: () => onDatePicked(context),
+                        onPressed: () => onDatePicked(),
                         child: Text(
                           date == ''
                               ? AppLocalizations.of(context)!.chooseDate
@@ -287,7 +287,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                     ),
                     Spacer(),
                     TextButton(
-                        onPressed: () => onTimePicked(context),
+                        onPressed: () => onTimePicked(),
                         child: Text(
                           time == ''
                               ? AppLocalizations.of(context)!.chooseTime
@@ -376,7 +376,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
     );
   }
 
-  void onDatePicked(BuildContext context) async {
+  void onDatePicked() async {
     AppThemeProvider themeProvider =
         Provider.of<AppThemeProvider>(context, listen: false);
     DateTime? selectedDate = await showDatePicker(
@@ -416,7 +416,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
     }
   }
 
-  void onTimePicked(BuildContext context) async {
+  void onTimePicked() async {
     AppThemeProvider themeProvider =
         Provider.of<AppThemeProvider>(context, listen: false);
     TimeOfDay? selectedTime = await showTimePicker(

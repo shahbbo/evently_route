@@ -1,6 +1,7 @@
 import 'package:event_planning_app/core/network/local/cache_helper.dart';
 import 'package:event_planning_app/core/reuseable_widgets/tab_event_widget.dart';
 import 'package:event_planning_app/features/home_screen/views/home_view/provider/home_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -11,9 +12,9 @@ import '../../../provider/theme_provider.dart';
 import 'widgets/event_widget.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  const HomeView({super.key , this.userData});
 
-
+  final User? userData;
   @override
   State<HomeView> createState() => _HomeViewState();
 }
