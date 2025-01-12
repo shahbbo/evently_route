@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_planning_app/features/create_event_screen/data/event_model.dart';
 import 'package:event_planning_app/features/event_details_screen/presentation/pages/event_details.dart';
 import 'package:event_planning_app/features/home_screen/views/home_view/provider/home_provider.dart';
@@ -105,16 +104,11 @@ class _EventWidgetState extends State<EventWidget> {
                         print("Is fav after: $isFav");
                         widget.eventModel.isFavorite = isFav;
                         print("Event model after: ${widget.eventModel.toJson()}");
-                        homeProvider.updateFavoriteEvents(widget.eventModel);
                         homeProvider.updateEvent(
                             id: widget.eventModel.id ?? '',
                             updatedData: {
                               'isFavorite': isFav,
                             });
-                        homeProvider.editEvent(
-                          id: widget.eventModel.id ?? '',
-                          isFavorite: isFav,
-                        );
                       });
                     },
                   ),

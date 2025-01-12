@@ -7,8 +7,10 @@ import 'package:event_planning_app/features/on_boarding/presentation/pages/on_bo
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'core/fire_base/firebase_options.dart';
 import 'core/network/local/cache_helper.dart';
 import 'core/recources/app_theme.dart';
+import 'core/recources/constants.dart';
 import 'features/auth/presentation/pages/create_account.dart';
 import 'features/auth/presentation/pages/forget_password.dart';
 import 'features/auth/presentation/pages/login_screen.dart';
@@ -19,24 +21,27 @@ import 'features/provider/language_provider.dart';
 import 'features/provider/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'features/fire_base/firebase_options.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
   String? initialRoute;
-  if (CacheHelper.getData(key: 'OnBoarding') == null) {
-    initialRoute = OnBoarding1.routeName;
-  } else {
-    initialRoute = LoginScreen.routeName;
-  }
+  var uid = CacheHelper.getData(key: 'uid');
+  var onBoarding = CacheHelper.getData(key: 'OnBoarding');
+  print('onBoarding: $onBoarding');
+  print('uid: $uid');
+  if (onBoarding != null) {
+    if (uid != null) {
+    initialRoute = HomeScreen.routeName;}
+    else {initialRoute = LoginScreen.routeName;}}
+  else {initialRoute = OnBoarding1.routeName;}
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   // await FirebaseFirestore.instance.disableNetwork();
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (context) => AuthProvider()),
+    ChangeNotifierProvider(create: (context) => AuthProvider()..getUserInfo()),
     ChangeNotifierProvider(create: (context) => AppLanguageProvider()..loadLanguageFromCache()),
     ChangeNotifierProvider(create: (context) => AppThemeProvider()..loadThemeFromCache()),
     ChangeNotifierProvider(create: (context) => HomeProvider()..getAllEvents()..getFavoriteEvents()),

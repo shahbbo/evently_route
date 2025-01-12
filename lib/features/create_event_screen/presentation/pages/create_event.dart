@@ -10,12 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/fire_base/firebase_func.dart';
 import '../../../../core/recources/app_colors.dart';
 import '../../../../core/recources/app_styles.dart';
 import '../../../../core/recources/assets_manager.dart';
 import '../../../../core/reuseable_widgets/custom_text_form_feild.dart';
 import '../../../../core/reuseable_widgets/tab_event_widget.dart';
-import '../../../fire_base/firebase_func.dart';
 
 class CreateEvent extends StatefulWidget {
   static const String routeName = 'createEvent';
@@ -38,6 +38,12 @@ class _CreateEventState extends State<CreateEvent> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late String eventImage;
 
+  @override
+  void dispose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;

@@ -12,7 +12,20 @@
           "package_name": "com.example.event_planning_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "596807764872-lkjf3h4ncmgkhsn9e14n2000shi8acgk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.event_planning_app",
+            "certificate_hash": "be18a176fe4ba50aee29fc75ccbc8531073f686d"
+          }
+        },
+        {
+          "client_id": "596807764872-ul4bono2t84g1tqbvamt2q1fgstft0es.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCw_q0NpQlQTR4OXv2hdrQlYVz3152gtPo"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "596807764872-ul4bono2t84g1tqbvamt2q1fgstft0es.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "596807764872-f59k8ok76ilic4tu9ll6cthkmoq92767.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.eventPlanningApp"
+              }
+            }
+          ]
         }
       }
     }

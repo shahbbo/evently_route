@@ -1,9 +1,11 @@
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:event_planning_app/features/auth/presentation/provider/auth_provider/auth_provider.dart';
 import 'package:event_planning_app/features/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/network/local/cache_helper.dart';
 import '../../../../core/recources/app_colors.dart';
 import '../../../../core/recources/app_styles.dart';
 import '../../../../core/recources/assets_manager.dart';
@@ -31,6 +33,14 @@ class _CreateAccountState extends State<CreateAccount> {
   TextEditingController rePasswordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
 
+  @override
+  void dispose(){
+    emailController.dispose();
+    passwordController.dispose();
+    rePasswordController.dispose();
+    nameController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -71,6 +81,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     if(value!.isEmpty){
                       return AppLocalizations.of(context)!.name_required;
                     }
+                    return null;
                   },
                 ),
                 SizedBox(
@@ -87,6 +98,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     if(value!.isEmpty){
                       return AppLocalizations.of(context)!.email_required;
                     }
+                    return null;
                   },
                 ),
                 SizedBox(
@@ -115,6 +127,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     }else if (rePasswordController.text != passwordController.text){
                       return AppLocalizations.of(context)!.password_not_match;
                     }
+                    return null;
                     },
                 ),
                 SizedBox(
@@ -143,6 +156,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     }else if (rePasswordController.text != passwordController.text){
                       return AppLocalizations.of(context)!.password_not_match;
                     }
+                    return null;
                   },
                 ),
                 SizedBox(
@@ -151,9 +165,21 @@ class _CreateAccountState extends State<CreateAccount> {
                 CustomButton(
                   onTap: (){
                     if(formKey.currentState!.validate()){
-                      authProvider.signUp1(emailController.text, passwordController.text, nameController.text).then((value) {
+                      authProvider.signUp1(emailController.text, passwordController.text, nameController.text).then((value) async {
                         if(value != null){
-                          Navigator.pushNamed(context, HomeScreen.routeName);
+                          await authProvider.getUserInfo();
+                          CacheHelper.saveData(key: 'uid', value: authProvider.uid);
+                          CacheHelper.saveData(key: 'email', value: authProvider.email);
+                          CacheHelper.saveData(key: 'name', value: authProvider.name);
+                          Navigator.pushNamed(context, HomeScreen.routeName).then((value) {
+                            emailController.clear();
+                            passwordController.clear();
+                            rePasswordController.clear();
+                            nameController.clear();
+                            CherryToast.success(
+                              title: Text(AppLocalizations.of(context)!.register_success),
+                            ).show(context);
+                          });
                         }
                       });
                     }

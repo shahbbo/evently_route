@@ -71,6 +71,12 @@
   "email_exist": "Email already exist",
   "login_failed": "Login Failed",
     "register_failed": "Register Failed",
-  "eventUpdated": "Event Updated Successfully"
+  "eventUpdated": "Event Updated Successfully",
+  "login_success": "Login Successfully",
+  "register_success": "Register Successfully",
+    "reset_password_success": "Reset Password Successfully",
+    "reset_password_failed": "Reset Password Failed",
+    "eventDeleted": "Event Deleted Successfully",
+    "logout_success": "Logout Successfully"
 
 }

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../create_event_screen/data/event_model.dart';
+import '../../features/create_event_screen/data/event_model.dart';
 class FireBaseFunctions {
   static CollectionReference<EventModel> getEventsCollection() {
     return FirebaseFirestore.instance.collection(EventModel.collectionName)

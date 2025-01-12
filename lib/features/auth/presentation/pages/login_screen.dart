@@ -1,7 +1,10 @@
+import 'package:cherry_toast/cherry_toast.dart';
+import 'package:event_planning_app/core/network/local/cache_helper.dart';
 import 'package:event_planning_app/features/auth/presentation/provider/auth_provider/auth_provider.dart';
 import 'package:event_planning_app/features/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/recources/app_colors.dart';
 import '../../../../core/recources/app_styles.dart';
@@ -29,10 +32,17 @@ TextEditingController emailController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
 class _LoginScreenState extends State<LoginScreen> {
   @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context);
-    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -52,12 +62,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 CustomTextFormField(
                   borderColor: AppColors.gray,
                   hintText: AppLocalizations.of(context)!.email,
-                  prefixIcon: Icon(Icons.email,
-                    color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
+                  prefixIcon: Icon(
+                    Icons.email,
+                    color: themeProvider.appTheme == ThemeMode.light
+                        ? AppColors.gray
+                        : AppColors.white,
                   ),
                   controller: emailController,
-                  validator: (value){
-                    if(value!.isEmpty){
+                  validator: (value) {
+                    if (value!.isEmpty) {
                       return AppLocalizations.of(context)!.email_required;
                     }
                   },
@@ -69,21 +82,28 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: passwordController,
                   borderColor: AppColors.gray,
                   hintText: AppLocalizations.of(context)!.password,
-                  prefixIcon: Icon(Icons.lock,
-                    color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
+                  prefixIcon: Icon(
+                    Icons.lock,
+                    color: themeProvider.appTheme == ThemeMode.light
+                        ? AppColors.gray
+                        : AppColors.white,
                   ),
                   obscureText: obscureText,
                   suffixIcon: IconButton(
-                      onPressed: (){
-                        setState(() {
-                          obscureText = !obscureText;
-                        });
-                      },
-                      icon: obscureText ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
-                  color: themeProvider.appTheme == ThemeMode.light ? AppColors.gray : AppColors.white,
+                    onPressed: () {
+                      setState(() {
+                        obscureText = !obscureText;
+                      });
+                    },
+                    icon: obscureText
+                        ? Icon(Icons.visibility_off)
+                        : Icon(Icons.visibility),
+                    color: themeProvider.appTheme == ThemeMode.light
+                        ? AppColors.gray
+                        : AppColors.white,
                   ),
-                  validator: (value){
-                    if(value!.isEmpty){
+                  validator: (value) {
+                    if (value!.isEmpty) {
                       return AppLocalizations.of(context)!.password_required;
                     }
                   },
@@ -95,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     InkWell(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pushNamed(context, ForgetPassword.routeName);
                       },
                       child: Text(
@@ -114,11 +134,24 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: height * .02,
                 ),
                 CustomButton(
-                  onTap: (){
-                    if(formKey.currentState!.validate()){
-                      authProvider.signIn(emailController.text, passwordController.text).then((value) {
-                        if(value != null){
-                          Navigator.pushNamed(context, HomeScreen.routeName , arguments: value);
+                  onTap: () {
+                    if (formKey.currentState!.validate()) {
+                      authProvider
+                          .signIn(emailController.text, passwordController.text)
+                          .then((value) async {
+                        if (value != null) {
+                          await authProvider.getUserInfo();
+                          CacheHelper.saveData(key: 'uid', value: authProvider.uid);
+                          print('uid: ${authProvider.uid}');
+                          CacheHelper.saveData(key: 'email', value: authProvider.email);
+                          print('email: ${authProvider.email}');
+                          CacheHelper.saveData(key: 'name', value: authProvider.name);
+                          print('name: ${authProvider.name}');
+                          Navigator.pushNamed(context, HomeScreen.routeName).then((value) {
+                            CherryToast.success(
+                              title: Text(AppLocalizations.of(context)!.login_success),
+                            ).show(context);
+                          });
                         }
                       });
                     }
@@ -136,13 +169,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Text(AppLocalizations.of(context)!.have_not_account,
                         style: AppStyle.black16medium.copyWith(
-                        color: themeProvider.appTheme == ThemeMode.light ? AppColors.black : AppColors.white,
+                          color: themeProvider.appTheme == ThemeMode.light
+                              ? AppColors.black
+                              : AppColors.white,
                         )),
                     SizedBox(
                       width: 10,
                     ),
                     InkWell(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pushNamed(context, CreateAccount.routeName);
                       },
                       child: Text(
@@ -171,7 +206,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       width: 10,
                     ),
-                    Text( AppLocalizations.of(context)!.or,style: AppStyle.primary14medium,),
+                    Text(
+                      AppLocalizations.of(context)!.or,
+                      style: AppStyle.primary14medium,
+                    ),
                     SizedBox(
                       width: 10,
                     ),
@@ -187,7 +225,24 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: height * .02,
                 ),
                 CustomButton(
-                  onTap: (){},
+                  onTap: () {
+                    authProvider.signInWithGoogle().then((value) async {
+                      if (value != null) {
+                        await authProvider.getUserInfo();
+                        CacheHelper.saveData(key: 'uid', value: authProvider.uid);
+                        print('uid: ${authProvider.uid}');
+                        CacheHelper.saveData(key: 'email', value: authProvider.email);
+                        print('email: ${authProvider.email}');
+                        CacheHelper.saveData(key: 'name', value: authProvider.name);
+                        print('name: ${authProvider.name}');
+                        Navigator.pushNamed(context, HomeScreen.routeName,).then((value) {
+                              CherryToast.success(
+                                title: Text(AppLocalizations.of(context)!.login_success),
+                              ).show(context);
+                        });
+                      }
+                    });
+                  },
                   textColor: AppColors.primaryColorLight,
                   buttonColor: Theme.of(context).primaryColorLight,
                   buttonName: AppLocalizations.of(context)!.loginWithGoogle,

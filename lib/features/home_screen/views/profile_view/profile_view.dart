@@ -1,3 +1,5 @@
+import 'package:event_planning_app/core/network/local/cache_helper.dart';
+import 'package:event_planning_app/core/recources/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -52,12 +54,12 @@ class _ProfileViewState extends State<ProfileView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Mahmoud Shahbo',
+                              name ?? '',
                               style: AppStyle.white24bold,
                             ),
                             Text(
                               overflow: TextOverflow.fade,
-                              "m.shahbbo@gmail.com",
+                              email ?? '',
                               style: AppStyle.white16medium,
                               textAlign: TextAlign.justify,
                             ),
@@ -189,8 +191,10 @@ class _ProfileViewState extends State<ProfileView> {
                 SizedBox(height: height * 0.15),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(
-                        context, LoginScreen.routeName);
+                    CacheHelper.clearData(key: 'uid');
+                    CacheHelper.clearData(key: 'email');
+                    CacheHelper.clearData(key: 'name');
+                    Navigator.pushReplacementNamed(context, LoginScreen.routeName);
                   },
                   style: ButtonStyle(
                     shape: WidgetStatePropertyAll(RoundedRectangleBorder(

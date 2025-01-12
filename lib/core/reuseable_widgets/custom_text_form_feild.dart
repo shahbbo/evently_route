@@ -14,7 +14,10 @@ class CustomTextFormField extends StatelessWidget {
   final int? numLines;
   final bool? obscureText;
   final String? Function(String?)? validator;
+  final String? Function(String?)? onChanged;
+
   final VoidCallback? onTap;
+
 
   const CustomTextFormField({
     super.key,
@@ -26,13 +29,14 @@ class CustomTextFormField extends StatelessWidget {
     this.suffixIcon,
     this.obscureText,
     this.validator,
-    this.onTap,
+    this.onTap, this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context);
     return TextFormField(
+      onChanged: onChanged,
       obscureText: obscureText ?? false,
       obscuringCharacter: '*',
       controller: controller,

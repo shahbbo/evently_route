@@ -70,5 +70,11 @@
     "email_exist" : "الايميل موجود بالفعل",
     "login_failed" : "فشل تسجيل الدخول",
     "register_failed" : "فشل التسجيل",
-  "eventUpdated" : "تم تحديث الحدث بنجاح"
+  "eventUpdated" : "تم تحديث الحدث بنجاح",
+  "login_success" : "تم تسجيل الدخول بنجاح",
+    "register_success" : "تم التسجيل بنجاح",
+    "reset_password_success" : "تم اعادة تعيين كلمة المرور بنجاح",
+    "reset_password_failed" : "فشل اعادة تعيين كلمة المرور",
+    "logout_success" : "تم تسجيل الخروج بنجاح",
+    "eventDeleted" : "تم حذف الحدث بنجاح"
 }
