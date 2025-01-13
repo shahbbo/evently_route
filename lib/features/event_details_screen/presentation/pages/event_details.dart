@@ -19,6 +19,7 @@ class EventDetails extends StatefulWidget {
 }
 
 class _EventDetailsState extends State<EventDetails> {
+
 /*  @override
   void didChangeDependencies() {
     super.didChangeDependencies();

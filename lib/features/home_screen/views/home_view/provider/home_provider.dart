@@ -58,18 +58,19 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  EventModel filteredEventById(String id) {
+    return events.firstWhere((element) => element.id == id);
+  }
+
   EventModel? eventModel;
 
   Future<EventModel?> getEventById(String id) async {
     try {
-      // استرجاع الوثيقة من Firebase
       var doc = await FireBaseFunctions.getEventsCollection().doc(id).get();
-
       if (doc.exists) {
         final data = doc.data();
-        if (data != null && data is Map<String, dynamic>) {
-          // إنشاء كائن EventModel من البيانات
-          eventModel = EventModel.fromJson(data as Map<String, dynamic>);
+        if (data != null) {
+          eventModel = EventModel.fromJson(data);
           notifyListeners();
           return eventModel;
         } else {

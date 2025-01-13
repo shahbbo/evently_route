@@ -24,17 +24,18 @@ class EventModel {
     this.isFavorite,
   });
 
-  EventModel.fromJson(Map<String, dynamic> json)
-      : id = json['id'] as String,
-        category = json['category'],
-        image = json['image'],
-        title = json['title'],
-        description = json['description'],
-        date = json['date'],
-        time = json['time'],
-        lat = json['lat'],
-        long = json['long'],
-        isFavorite = json['isFavorite'];
+  EventModel.fromJson(dynamic json) {
+    id = json['id'];
+    category = json['category'];
+    image = json['image'];
+    title = json['title'];
+    description = json['description'];
+    date = json['date'];
+    time = json['time'];
+    lat = json['lat'];
+    long = json['long'];
+    isFavorite = json['isFavorite'];
+  }
 
   Map<String, dynamic> toJson() => {
         'id': id ?? '',

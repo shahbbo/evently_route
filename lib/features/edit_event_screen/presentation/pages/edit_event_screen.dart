@@ -482,7 +482,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
       print("Updated data: $updatedData");
       await homeProvider.updateEvent(id: model.id ?? '', updatedData: updatedData)
           .then((value) async {
-            Navigator.pop(context , homeProvider.getEventById(model.id ?? ''));
+            Navigator.pop(context , homeProvider.filteredEventById(model.id ?? ''));
             print("Event updated : ${homeProvider.getEventById(model.id ?? '').toString()}");
         CherryToast.success(
           title: Text(AppLocalizations.of(context)!.eventUpdated),
