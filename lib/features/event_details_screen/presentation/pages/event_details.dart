@@ -10,18 +10,41 @@ import '../../../../core/recources/app_styles.dart';
 import '../../../create_event_screen/data/event_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class EventDetails extends StatelessWidget {
-  const EventDetails({
-    super.key,
-  });
+class EventDetails extends StatefulWidget {
+  const EventDetails({super.key,});
   static const String routeName = 'eventDetails';
+
+  @override
+  State<EventDetails> createState() => _EventDetailsState();
+}
+
+class _EventDetailsState extends State<EventDetails> {
+/*  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    eventModel = ModalRoute.of(context)!.settings.arguments as EventModel;
+  }
+  @override
+  void didUpdateWidget(covariant EventDetails oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final updatedEvent = ModalRoute.of(context)!.settings.arguments as EventModel;
+    if (updatedEvent != eventModel) {
+      setState(() {
+        eventModel = updatedEvent;
+      });
+    }
+  }*/
   @override
   Widget build(BuildContext context) {
-    final EventModel eventModel = ModalRoute.of(context)!.settings.arguments as EventModel;
     var height = MediaQuery.of(context).size.height;
     AppThemeProvider themeProvider = Provider.of<AppThemeProvider>(context);
     bool isLight = themeProvider.appTheme == ThemeMode.light;
     HomeProvider homeProvider = Provider.of<HomeProvider>(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      homeProvider.getFavoriteEvents();
+      homeProvider.getAllEvents();
+    });
+    EventModel eventModel = ModalRoute.of(context)!.settings.arguments as EventModel;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -34,9 +57,26 @@ class EventDetails extends StatelessWidget {
         iconTheme: IconThemeData(color: AppColors.blue),
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, EditEventScreen.routeName,
-                  arguments: eventModel);
+            onPressed: () async {
+              // Navigator.pushNamed(context, EditEventScreen.routeName, arguments: eventModel).then((value) async {
+              //   await homeProvider.getAllEvents();
+              //   setState(() {
+              //     print('eventModel: $eventModel');
+              //     eventModel = homeProvider.getEventById(eventModel.id!) as EventModel;
+              //     print('updatedEventModel: $eventModel');
+              //   });
+              // });
+              final updatedEventModel = await Navigator.pushNamed(
+                context,
+                EditEventScreen.routeName,
+                arguments: eventModel,
+              ) as EventModel?;
+              if (updatedEventModel != null) {
+                setState(() {
+                  eventModel = updatedEventModel;
+                  print('updatedEventModel: $updatedEventModel');
+                });
+              }
             },
             icon: Icon(
               Icons.edit_note_outlined,

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_planning_app/features/create_event_screen/data/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -38,7 +37,6 @@ class HomeProvider extends ChangeNotifier {
   Future<void> getAllEvents() async {
     FireBaseFunctions.getEventsCollection().get().then((value) {
       events = value.docs.map((doc) => doc.data()).toList();
-      print("Documents fetched: ${value.docs.length}");
       if (currentIndex == 0) {
         filteredEvents = events;
       }
@@ -58,6 +56,34 @@ class HomeProvider extends ChangeNotifier {
           .toList();
     }
     notifyListeners();
+  }
+
+  EventModel? eventModel;
+
+  Future<EventModel?> getEventById(String id) async {
+    try {
+      // استرجاع الوثيقة من Firebase
+      var doc = await FireBaseFunctions.getEventsCollection().doc(id).get();
+
+      if (doc.exists) {
+        final data = doc.data();
+        if (data != null && data is Map<String, dynamic>) {
+          // إنشاء كائن EventModel من البيانات
+          eventModel = EventModel.fromJson(data as Map<String, dynamic>);
+          notifyListeners();
+          return eventModel;
+        } else {
+          print("Document data is null or not a Map");
+          return null;
+        }
+      } else {
+        print("Document does not exist");
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching document: $e");
+      return null;
+    }
   }
 
   // fav section
@@ -80,10 +106,11 @@ class HomeProvider extends ChangeNotifier {
       {required String id, required Map<String, dynamic> updatedData}) async {
     FireBaseFunctions.getEventsCollection().doc(id).get().then((doc) {
       if (doc.exists) {
-        doc.reference.update(updatedData).then((_) async {
+        doc.reference.update(updatedData).then((value) async {
           print("Document updated successfully");
           await getAllEvents();
           await getFavoriteEvents();
+          await getEventById(id);
           notifyListeners();
         }).catchError((e) {
           print("Error updating document: $e");

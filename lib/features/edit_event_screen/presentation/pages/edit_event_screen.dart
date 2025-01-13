@@ -44,6 +44,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
     AssetsManager.bookclubBg,
     AssetsManager.workshopBg,
   ];
+
   void getEventNameList(BuildContext context) {
     eventList = [
       AppLocalizations.of(context)!.sport,
@@ -57,6 +58,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
       AppLocalizations.of(context)!.work_shop,
     ];
   }
+
   List<String> arEventList = [
     'الرياضة',
     'عيد ميلاد',
@@ -65,7 +67,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
     'الطعام',
     'اجازة',
     'هوايات'
-    'نادى القراءة',
+        'نادى القراءة',
     'ورشة عمل',
   ];
   List<String> enEventList = [
@@ -110,6 +112,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
     descriptionController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -127,266 +130,265 @@ class _EditEventScreenState extends State<EditEventScreen> {
         iconTheme: IconThemeData(color: AppColors.blue),
       ),
       body: Consumer<HomeProvider>(
-  builder: (context, provider, child) {
-  return Form(
-        key: formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(
-                  height: height * .02,
-                ),
-                Container(
-                  height: height * .25,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    image: DecorationImage(
-                      image: AssetImage(eventImage??''),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: height * .02,
-                ),
-                DefaultTabController(
-                    length: eventList.length,
-                    child: TabBar(
-                        tabAlignment: TabAlignment.start,
-                        onTap: (index) {
-                          setState(() {
-                            selectedTab = index;
-                            category = selectedTab == 0
-                                ? eventList[0]
-                                : eventList[selectedTab];
-                            eventImage = eventImageList[selectedTab];
-                          });
-                        },
-                        dividerColor: Colors.transparent,
-                        isScrollable: true,
-                        indicatorColor: Colors.transparent,
-                        labelPadding: EdgeInsets.all(5),
-                        tabs: eventList
-                            .map((eventName) => TabEventWidget(
-                                  tabName: eventName,
-                                  isCreateEvent: true,
-                                  selectedTab: selectedTab ==
-                                      eventList.indexOf(eventName),
-                                ))
-                            .toList())),
-                Text(
-                  AppLocalizations.of(context)!.title,
-                  style: AppStyle.black16medium.copyWith(
-                    color: themeProvider.appTheme == ThemeMode.light
-                        ? AppColors.black
-                        : AppColors.white,
-                  ),
-                ),
-                SizedBox(
-                  height: height * .01,
-                ),
-                CustomTextFormField(
-                  controller: titleController,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return AppLocalizations.of(context)!.pleaseEnterTitle;
-                    }
-                    return null;
-                  },
-                  borderColor: themeProvider.appTheme == ThemeMode.light
-                      ? AppColors.gray
-                      : AppColors.blue,
-                  prefixIcon: Icon(
-                    Icons.edit_note_outlined,
-                    color: themeProvider.appTheme == ThemeMode.light
-                        ? AppColors.gray
-                        : AppColors.white,
-                  ),
-                  hintText: AppLocalizations.of(context)!.title,
-                ),
-                SizedBox(
-                  height: height * .01,
-                ),
-                Text(
-                  AppLocalizations.of(context)!.description,
-                  style: AppStyle.black16medium.copyWith(
-                    color: themeProvider.appTheme == ThemeMode.light
-                        ? AppColors.black
-                        : AppColors.white,
-                  ),
-                ),
-                SizedBox(
-                  height: height * .015,
-                ),
-                CustomTextFormField(
-                  controller: descriptionController,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return AppLocalizations.of(context)!
-                          .pleaseEnterDescription;
-                    }
-                    return null;
-                  },
-                  borderColor: themeProvider.appTheme == ThemeMode.light
-                      ? AppColors.gray
-                      : AppColors.blue,
-                  hintText: AppLocalizations.of(context)!.description,
-                  numLines: 5,
-                ),
-                SizedBox(
-                  height: height * .015,
-                ),
-                Row(
+        builder: (context, provider, child) {
+          return Form(
+            key: formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Icon(
-                      Icons.date_range_outlined,
-                      color: themeProvider.appTheme == ThemeMode.light
-                          ? AppColors.black
-                          : AppColors.white,
+                    SizedBox(
+                      height: height * .02,
+                    ),
+                    Container(
+                      height: height * .25,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        image: DecorationImage(
+                          image: AssetImage(eventImage ?? ''),
+                          fit: BoxFit.fill,
+                        ),
+                      ),
                     ),
                     SizedBox(
-                      width: width * .015,
+                      height: height * .02,
                     ),
+                    DefaultTabController(
+                        length: eventList.length,
+                        child: TabBar(
+                            tabAlignment: TabAlignment.start,
+                            onTap: (index) {
+                              setState(() {
+                                selectedTab = index;
+                                category = selectedTab == 0
+                                    ? eventList[0]
+                                    : eventList[selectedTab];
+                                eventImage = eventImageList[selectedTab];
+                              });
+                            },
+                            dividerColor: Colors.transparent,
+                            isScrollable: true,
+                            indicatorColor: Colors.transparent,
+                            labelPadding: EdgeInsets.all(5),
+                            tabs: eventList
+                                .map((eventName) => TabEventWidget(
+                                      tabName: eventName,
+                                      isCreateEvent: true,
+                                      selectedTab: selectedTab ==
+                                          eventList.indexOf(eventName),
+                                    ))
+                                .toList())),
                     Text(
-                      AppLocalizations.of(context)!.eventDate,
+                      AppLocalizations.of(context)!.title,
                       style: AppStyle.black16medium.copyWith(
                         color: themeProvider.appTheme == ThemeMode.light
                             ? AppColors.black
                             : AppColors.white,
                       ),
                     ),
-                    Spacer(),
-                    TextButton(
-                        onPressed: () => onDatePicked(),
-                        child: Text(
-                          date == ''
-                              ? AppLocalizations.of(context)!.chooseDate
-                              : date,
-                          style: AppStyle.primary14bold.copyWith(
-                            color: AppColors.blue,
-                          ),
-                        )),
-                  ],
-                ),
-                SizedBox(
-                  height: height * .015,
-                ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.access_time,
-                      color: themeProvider.appTheme == ThemeMode.light
-                          ? AppColors.black
-                          : AppColors.white,
+                    SizedBox(
+                      height: height * .01,
+                    ),
+                    CustomTextFormField(
+                      controller: titleController,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return AppLocalizations.of(context)!.pleaseEnterTitle;
+                        }
+                        return null;
+                      },
+                      borderColor: themeProvider.appTheme == ThemeMode.light
+                          ? AppColors.gray
+                          : AppColors.blue,
+                      prefixIcon: Icon(
+                        Icons.edit_note_outlined,
+                        color: themeProvider.appTheme == ThemeMode.light
+                            ? AppColors.gray
+                            : AppColors.white,
+                      ),
+                      hintText: AppLocalizations.of(context)!.title,
                     ),
                     SizedBox(
-                      width: width * .015,
+                      height: height * .01,
                     ),
                     Text(
-                      AppLocalizations.of(context)!.eventTime,
+                      AppLocalizations.of(context)!.description,
                       style: AppStyle.black16medium.copyWith(
                         color: themeProvider.appTheme == ThemeMode.light
                             ? AppColors.black
                             : AppColors.white,
                       ),
                     ),
-                    Spacer(),
-                    TextButton(
-                        onPressed: () => onTimePicked(),
-                        child: Text(
-                          time == ''
-                              ? AppLocalizations.of(context)!.chooseTime
-                              : time,
-                          style: AppStyle.primary14bold.copyWith(
-                            color: AppColors.blue,
-                          ),
-                        )),
-                  ],
-                ),
-                SizedBox(
-                  height: height * .015,
-                ),
-                Text(
-                  AppLocalizations.of(context)!.location,
-                  style: AppStyle.black16medium.copyWith(
-                    color: themeProvider.appTheme == ThemeMode.light
-                        ? AppColors.black
-                        : AppColors.white,
-                  ),
-                ),
-                SizedBox(
-                  height: height * .01,
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: AppColors.transparent,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: AppColors.blue,
-                        width: 1,
-                      ),
+                    SizedBox(
+                      height: height * .015,
                     ),
-                    child: Row(
+                    CustomTextFormField(
+                      controller: descriptionController,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return AppLocalizations.of(context)!
+                              .pleaseEnterDescription;
+                        }
+                        return null;
+                      },
+                      borderColor: themeProvider.appTheme == ThemeMode.light
+                          ? AppColors.gray
+                          : AppColors.blue,
+                      hintText: AppLocalizations.of(context)!.description,
+                      numLines: 5,
+                    ),
+                    SizedBox(
+                      height: height * .015,
+                    ),
+                    Row(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.blue,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          padding: EdgeInsets.all(10),
-                          child: Icon(
-                            Icons.location_searching,
-                            color: AppColors.white,
-                          ),
+                        Icon(
+                          Icons.date_range_outlined,
+                          color: themeProvider.appTheme == ThemeMode.light
+                              ? AppColors.black
+                              : AppColors.white,
                         ),
                         SizedBox(
-                          width: width * .02,
+                          width: width * .015,
                         ),
                         Text(
-                          AppLocalizations.of(context)!.chooseLocation,
-                          style: AppStyle.primary14bold.copyWith(
-                            color: AppColors.blue,
-                            fontSize: 16,
+                          AppLocalizations.of(context)!.eventDate,
+                          style: AppStyle.black16medium.copyWith(
+                            color: themeProvider.appTheme == ThemeMode.light
+                                ? AppColors.black
+                                : AppColors.white,
                           ),
                         ),
                         Spacer(),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: AppColors.blue,
-                        ),
+                        TextButton(
+                            onPressed: () => onDatePicked(),
+                            child: Text(
+                              date == ''
+                                  ? AppLocalizations.of(context)!.chooseDate
+                                  : date,
+                              style: AppStyle.primary14bold.copyWith(
+                                color: AppColors.blue,
+                              ),
+                            )),
                       ],
                     ),
-                  ),
+                    SizedBox(
+                      height: height * .015,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.access_time,
+                          color: themeProvider.appTheme == ThemeMode.light
+                              ? AppColors.black
+                              : AppColors.white,
+                        ),
+                        SizedBox(
+                          width: width * .015,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!.eventTime,
+                          style: AppStyle.black16medium.copyWith(
+                            color: themeProvider.appTheme == ThemeMode.light
+                                ? AppColors.black
+                                : AppColors.white,
+                          ),
+                        ),
+                        Spacer(),
+                        TextButton(
+                            onPressed: () => onTimePicked(),
+                            child: Text(
+                              time == ''
+                                  ? AppLocalizations.of(context)!.chooseTime
+                                  : time,
+                              style: AppStyle.primary14bold.copyWith(
+                                color: AppColors.blue,
+                              ),
+                            )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: height * .015,
+                    ),
+                    Text(
+                      AppLocalizations.of(context)!.location,
+                      style: AppStyle.black16medium.copyWith(
+                        color: themeProvider.appTheme == ThemeMode.light
+                            ? AppColors.black
+                            : AppColors.white,
+                      ),
+                    ),
+                    SizedBox(
+                      height: height * .01,
+                    ),
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppColors.transparent,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: AppColors.blue,
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.blue,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              padding: EdgeInsets.all(10),
+                              child: Icon(
+                                Icons.location_searching,
+                                color: AppColors.white,
+                              ),
+                            ),
+                            SizedBox(
+                              width: width * .02,
+                            ),
+                            Text(
+                              AppLocalizations.of(context)!.chooseLocation,
+                              style: AppStyle.primary14bold.copyWith(
+                                color: AppColors.blue,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Spacer(),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: AppColors.blue,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: height * .02,
+                    ),
+                    CustomButton(
+                      onTap: () {
+                        updateEvent();
+                      },
+                      buttonColor: AppColors.blue,
+                      buttonName: AppLocalizations.of(context)!.editEvent,
+                      textColor: AppColors.white,
+                      borderColor: AppColors.blue,
+                    )
+                  ],
                 ),
-                SizedBox(
-                  height: height * .02,
-                ),
-                CustomButton(
-                  onTap: () {
-                    updateEvent();
-                  },
-                  buttonColor: AppColors.blue,
-                  buttonName: AppLocalizations.of(context)!.editEvent,
-                  textColor: AppColors.white,
-                  borderColor: AppColors.blue,
-                )
-              ],
+              ),
             ),
-          ),
-        ),
-      );
-  },
-),
+          );
+        },
+      ),
     );
   }
-
   void onDatePicked() async {
     AppThemeProvider themeProvider =
         Provider.of<AppThemeProvider>(context, listen: false);
@@ -466,7 +468,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
     }
   }
   Future<void> updateEvent() async {
-    HomeProvider homeProvider = Provider.of<HomeProvider>(context, listen: false);
+    HomeProvider homeProvider =
+        Provider.of<HomeProvider>(context, listen: false);
     EventModel model = ModalRoute.of(context)!.settings.arguments as EventModel;
     if (formKey.currentState!.validate()) {
       Map<String, dynamic> updatedData = {};
@@ -477,16 +480,16 @@ class _EditEventScreenState extends State<EditEventScreen> {
       if (time != model.time && time.isNotEmpty) updatedData['time'] = time;
       if (eventImage != model.image && eventImage != null) updatedData['image'] = eventImage;
       print("Updated data: $updatedData");
-      await homeProvider.updateEvent(id: model.id ?? '', updatedData: updatedData).then((value) {
-        homeProvider.getFavoriteEvents();
-        homeProvider.getAllEvents();
+      await homeProvider.updateEvent(id: model.id ?? '', updatedData: updatedData)
+          .then((value) async {
+            Navigator.pop(context , homeProvider.getEventById(model.id ?? ''));
+            print("Event updated : ${homeProvider.getEventById(model.id ?? '').toString()}");
         CherryToast.success(
           title: Text(AppLocalizations.of(context)!.eventUpdated),
           animationCurve: Curves.easeInOut,
           animationDuration: Duration(milliseconds: 600),
         ).show(context);
       });
-      Navigator.pop(context);
     }
   }
 }
