@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_planning_app/features/auth/presentation/provider/auth_provider/auth_provider.dart';
 import 'package:event_planning_app/features/edit_event_screen/presentation/pages/edit_event_screen.dart';
 import 'package:event_planning_app/features/event_details_screen/presentation/pages/event_details.dart';
@@ -10,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'core/fire_base/firebase_options.dart';
 import 'core/network/local/cache_helper.dart';
 import 'core/recources/app_theme.dart';
-import 'core/recources/constants.dart';
 import 'features/auth/presentation/pages/create_account.dart';
 import 'features/auth/presentation/pages/forget_password.dart';
 import 'features/auth/presentation/pages/login_screen.dart';

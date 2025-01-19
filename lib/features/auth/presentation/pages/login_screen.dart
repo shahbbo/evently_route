@@ -4,7 +4,6 @@ import 'package:event_planning_app/features/auth/presentation/provider/auth_prov
 import 'package:event_planning_app/features/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/recources/app_colors.dart';
 import '../../../../core/recources/app_styles.dart';
@@ -73,6 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (value!.isEmpty) {
                       return AppLocalizations.of(context)!.email_required;
                     }
+                    return null;
                   },
                 ),
                 SizedBox(
@@ -106,6 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (value!.isEmpty) {
                       return AppLocalizations.of(context)!.password_required;
                     }
+                    return null;
                   },
                 ),
                 SizedBox(

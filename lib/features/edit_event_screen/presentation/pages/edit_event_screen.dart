@@ -1,4 +1,5 @@
 import 'package:cherry_toast/cherry_toast.dart';
+import 'package:event_planning_app/features/home_screen/home_screen.dart';
 import 'package:event_planning_app/features/home_screen/views/home_view/provider/home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -372,8 +373,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
                       height: height * .02,
                     ),
                     CustomButton(
-                      onTap: () {
-                        updateEvent();
+                      onTap: () async {
+                        await updateEvent();
                       },
                       buttonColor: AppColors.blue,
                       buttonName: AppLocalizations.of(context)!.editEvent,
@@ -479,11 +480,10 @@ class _EditEventScreenState extends State<EditEventScreen> {
       if (date != model.date && date.isNotEmpty) updatedData['date'] = date;
       if (time != model.time && time.isNotEmpty) updatedData['time'] = time;
       if (eventImage != model.image && eventImage != null) updatedData['image'] = eventImage;
-      print("Updated data: $updatedData");
       await homeProvider.updateEvent(id: model.id ?? '', updatedData: updatedData)
           .then((value) async {
-            Navigator.pop(context , homeProvider.filteredEventById(model.id ?? ''));
-            print("Event updated : ${homeProvider.getEventById(model.id ?? '').toString()}");
+        Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
+        Navigator.pop(context , homeProvider.filteredEventById(model.id ?? ''));
         CherryToast.success(
           title: Text(AppLocalizations.of(context)!.eventUpdated),
           animationCurve: Curves.easeInOut,

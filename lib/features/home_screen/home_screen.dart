@@ -22,15 +22,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   var userData = ModalRoute.of(context)!.settings.arguments;
-  // }
   List<Widget> viewsList = [ HomeView(),  MapView(),  LikeView(),  ProfileView()];
   @override
   Widget build(BuildContext context) {
-    var userData = ModalRoute.of(context)!.settings.arguments;
     return Scaffold(
       extendBody: true,
       resizeToAvoidBottomInset: false, //يثبت الفلوتنج بوتون دلوقتي

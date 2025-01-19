@@ -63,7 +63,6 @@ class HomeProvider extends ChangeNotifier {
   }
 
   EventModel? eventModel;
-
   Future<EventModel?> getEventById(String id) async {
     try {
       var doc = await FireBaseFunctions.getEventsCollection().doc(id).get();
