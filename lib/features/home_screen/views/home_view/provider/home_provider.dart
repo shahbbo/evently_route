@@ -61,9 +61,7 @@ class HomeProvider extends ChangeNotifier {
     return events.firstWhere((element) => element.id == id);
   }
 
-  ///
   /// get event by id
-  ///
   EventModel? eventModel;
   Future<EventModel?> getEventById(String id) async {
     try {
@@ -71,7 +69,8 @@ class HomeProvider extends ChangeNotifier {
       if (doc.exists) {
         final data = doc.data();
         if (data != null) {
-          eventModel = EventModel.fromJson(data);
+          eventModel = data;
+          print("Document data: ${data.toJson()}");
           notifyListeners();
           return eventModel;
         } else {

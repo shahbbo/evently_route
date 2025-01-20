@@ -1,5 +1,4 @@
 import 'package:cherry_toast/cherry_toast.dart';
-import 'package:event_planning_app/features/home_screen/home_screen.dart';
 import 'package:event_planning_app/features/home_screen/views/home_view/provider/home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -486,11 +485,11 @@ class _EditEventScreenState extends State<EditEventScreen> {
         /// and pop the screen with updated event
         /// and show success toast
         /// and update the event list
-        EventModel? updatedEvent = await homeProvider.getEventById(model.id ?? '');
-        if (updatedEvent != null) {
-          Navigator.pop(context, updatedEvent);
-          print('Updated Event: ${updatedEvent.toJson()}');
-        }
+        // EventModel? updatedEvent = await homeProvider.getEventById(model.id ?? '');
+        // if (updatedEvent != null) {
+          Navigator.pop(context, /*homeProvider.eventModel*/);
+          // print('Updated Event: ${updatedEvent.toJson()}');
+        // }
         CherryToast.success(
           title: Text(AppLocalizations.of(context)!.eventUpdated),
           animationCurve: Curves.easeInOut,

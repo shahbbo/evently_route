@@ -26,16 +26,25 @@ class _EventDetailsState extends State<EventDetails> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      EventModel args = ModalRoute.of(context)!.settings.arguments as EventModel;
+      HomeProvider homeProvider = Provider.of<HomeProvider>(context, listen: false);
+      homeProvider.getEventById(args.id!).then((value) {
+        eventModel = value;
+        print('eventModel: $eventModel');
+        setState(() {});
+      });
+    });
   }
- @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    eventModel ??= ModalRoute.of(context)!.settings.arguments as EventModel;
-    if (updatedEventModel != null) {
-      eventModel = updatedEventModel;
-    }
-    setState(() {});
-  }
+  @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   eventModel ??= ModalRoute.of(context)!.settings.arguments as EventModel;
+  //   if (updatedEventModel != null) {
+  //     eventModel = updatedEventModel;
+  //   }
+  //   setState(() {});
+  // }
   // @override
   // void didUpdateWidget(covariant EventDetails oldWidget) {
   //   super.didUpdateWidget(oldWidget);
@@ -77,7 +86,7 @@ class _EventDetailsState extends State<EventDetails> {
               //     print('updatedEventModel: $eventModel');
               //   });
               // });
-              final result = await Navigator.pushNamed(
+              /*final result = await Navigator.pushNamed(
                 context,
                 EditEventScreen.routeName,
                 arguments: eventModel,
@@ -89,7 +98,8 @@ class _EventDetailsState extends State<EventDetails> {
                   eventModel = updatedEventModel;
                 });
                 print('Updated Event Model: $updatedEventModel');
-              }
+              }*/
+              Navigator.pushNamed(context, EditEventScreen.routeName,arguments: eventModel);
             },
             icon: Icon(
               Icons.edit_note_outlined,
