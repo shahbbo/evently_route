@@ -21,8 +21,7 @@ class EventDetails extends StatefulWidget {
 
 class _EventDetailsState extends State<EventDetails> {
   EventModel? eventModel;
-
-/*  @override
+  /*  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -36,7 +35,6 @@ class _EventDetailsState extends State<EventDetails> {
       });
     });
   }*/
-
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -65,10 +63,12 @@ class _EventDetailsState extends State<EventDetails> {
                 //   arguments: eventModel,
                 // ) as EventModel?;
                 // if (result != null) {
+                // await homeProvider.getEventById(eventModel!.id!).then((updatedEvent) {
                 //   setState(() {
-                //     eventModel = result;
+                //     eventModel = updatedEvent;
                 //   });
-                //   print('Updated Event Model from Provider: $eventModel');
+                // });
+                // print('Updated Event Model from Provider: $eventModel');
                 // }
               },
               icon: Icon(
