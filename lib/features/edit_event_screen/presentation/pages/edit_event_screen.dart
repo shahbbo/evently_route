@@ -480,16 +480,12 @@ class _EditEventScreenState extends State<EditEventScreen> {
       if (eventImage != model.image && eventImage != null) updatedData['image'] = eventImage;
       await homeProvider.updateEvent(id: model.id ?? '', updatedData: updatedData)
           .then((value) async {
-        // Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
-        /// Get updated event by id
-        /// and pop the screen with updated event
-        /// and show success toast
-        /// and update the event list
-        // EventModel? updatedEvent = await homeProvider.getEventById(model.id ?? '');
-        // if (updatedEvent != null) {
-          Navigator.pop(context, /*homeProvider.eventModel*/);
-          // print('Updated Event: ${updatedEvent.toJson()}');
-        // }
+        Navigator.pop(context);
+        /*EventModel? updatedEvent = await homeProvider.getEventById(model.id ?? '');
+        if (updatedEvent != null) {
+          Navigator.pop(context, updatedEvent);
+          print('Updated Event: ${updatedEvent.toJson()}');
+        }*/
         CherryToast.success(
           title: Text(AppLocalizations.of(context)!.eventUpdated),
           animationCurve: Curves.easeInOut,

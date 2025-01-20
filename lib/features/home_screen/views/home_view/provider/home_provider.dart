@@ -83,6 +83,7 @@ class HomeProvider extends ChangeNotifier {
       }
     } catch (e) {
       print("Error fetching document: $e");
+      notifyListeners();
       return null;
     }
   }
@@ -103,7 +104,7 @@ class HomeProvider extends ChangeNotifier {
   /*
   // edit section
   */
-  Future<void> updateEvent(
+  Future<EventModel> updateEvent(
       {required String id, required Map<String, dynamic> updatedData}) async {
     FireBaseFunctions.getEventsCollection().doc(id).get().then((doc) {
       if (doc.exists) {
@@ -123,6 +124,7 @@ class HomeProvider extends ChangeNotifier {
       print("Error fetching document: $e");
     });
     notifyListeners();
+    return eventModel!;
   }
   /* Future<void> editEvent({
     required String id,
