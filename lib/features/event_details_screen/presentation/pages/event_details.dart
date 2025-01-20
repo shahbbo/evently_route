@@ -18,23 +18,34 @@ class EventDetails extends StatefulWidget {
   State<EventDetails> createState() => _EventDetailsState();
 }
 
+
 class _EventDetailsState extends State<EventDetails> {
 
-/*  @override
+  EventModel? eventModel;
+  EventModel? updatedEventModel;
+  @override
+  void initState() {
+    super.initState();
+  }
+ @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    eventModel = ModalRoute.of(context)!.settings.arguments as EventModel;
-  }
-  @override
-  void didUpdateWidget(covariant EventDetails oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    final updatedEvent = ModalRoute.of(context)!.settings.arguments as EventModel;
-    if (updatedEvent != eventModel) {
-      setState(() {
-        eventModel = updatedEvent;
-      });
+    eventModel ??= ModalRoute.of(context)!.settings.arguments as EventModel;
+    if (updatedEventModel != null) {
+      eventModel = updatedEventModel;
     }
-  }*/
+    setState(() {});
+  }
+  // @override
+  // void didUpdateWidget(covariant EventDetails oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   final updatedEvent = ModalRoute.of(context)!.settings.arguments as EventModel;
+  //   if (updatedEvent != eventModel) {
+  //     setState(() {
+  //       eventModel = updatedEvent;
+  //     });
+  //   }
+  // }
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -45,7 +56,6 @@ class _EventDetailsState extends State<EventDetails> {
       homeProvider.getFavoriteEvents();
       homeProvider.getAllEvents();
     });
-    EventModel eventModel = ModalRoute.of(context)!.settings.arguments as EventModel;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -67,16 +77,18 @@ class _EventDetailsState extends State<EventDetails> {
               //     print('updatedEventModel: $eventModel');
               //   });
               // });
-              final updatedEventModel = await Navigator.pushNamed(
+              final result = await Navigator.pushNamed(
                 context,
                 EditEventScreen.routeName,
                 arguments: eventModel,
               ) as EventModel?;
-              if (updatedEventModel != null) {
+
+              if (result != null) {
                 setState(() {
+                  updatedEventModel = result;
                   eventModel = updatedEventModel;
-                  print('updatedEventModel: $updatedEventModel');
                 });
+                print('Updated Event Model: $updatedEventModel');
               }
             },
             icon: Icon(
@@ -87,7 +99,7 @@ class _EventDetailsState extends State<EventDetails> {
           ),
           IconButton(
               onPressed: () {
-                homeProvider.deleteEvent(eventModel.id!).then((onValue) {
+                homeProvider.deleteEvent(eventModel!.id!).then((onValue) {
                   homeProvider.getAllEvents();
                   CherryToast.success(
                     title: Text('Event Deleted Successfully'),
@@ -118,7 +130,7 @@ class _EventDetailsState extends State<EventDetails> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 image: DecorationImage(
-                  image: AssetImage(eventModel.image ?? ''),
+                  image: AssetImage(eventModel!.image ?? ''),
                   fit: BoxFit.fill,
                 ),
               ),
@@ -127,7 +139,7 @@ class _EventDetailsState extends State<EventDetails> {
               height: height * .01,
             ),
             Text(
-              eventModel.title ?? '',
+              eventModel!.title ?? '',
               style: AppStyle.primary20bold.copyWith(color: AppColors.blue),
             ),
             SizedBox(
@@ -160,12 +172,12 @@ class _EventDetailsState extends State<EventDetails> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        eventModel.date ?? '',
+                        eventModel!.date ?? '',
                         style: AppStyle.primary14bold
                             .copyWith(color: AppColors.blue),
                       ),
                       Text(
-                        eventModel.time ?? '',
+                        eventModel!.time ?? '',
                         style: AppStyle.primary14bold
                             .copyWith(color: AppColors.blue),
                       ),
@@ -219,7 +231,7 @@ class _EventDetailsState extends State<EventDetails> {
               height: height * .005,
             ),
             Text(
-              eventModel.description ?? '',
+              eventModel!.description ?? '',
               style: AppStyle.primary14bold
                   .copyWith(color: isLight ? AppColors.black : AppColors.white),
             ),

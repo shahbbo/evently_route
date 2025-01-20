@@ -57,11 +57,13 @@ class HomeProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-
   EventModel filteredEventById(String id) {
     return events.firstWhere((element) => element.id == id);
   }
 
+  ///
+  /// get event by id
+  ///
   EventModel? eventModel;
   Future<EventModel?> getEventById(String id) async {
     try {

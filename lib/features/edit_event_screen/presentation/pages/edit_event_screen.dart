@@ -469,8 +469,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
     }
   }
   Future<void> updateEvent() async {
-    HomeProvider homeProvider =
-        Provider.of<HomeProvider>(context, listen: false);
+    HomeProvider homeProvider = Provider.of<HomeProvider>(context, listen: false);
     EventModel model = ModalRoute.of(context)!.settings.arguments as EventModel;
     if (formKey.currentState!.validate()) {
       Map<String, dynamic> updatedData = {};
@@ -482,8 +481,16 @@ class _EditEventScreenState extends State<EditEventScreen> {
       if (eventImage != model.image && eventImage != null) updatedData['image'] = eventImage;
       await homeProvider.updateEvent(id: model.id ?? '', updatedData: updatedData)
           .then((value) async {
-        Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
-        Navigator.pop(context , homeProvider.filteredEventById(model.id ?? ''));
+        // Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
+        /// Get updated event by id
+        /// and pop the screen with updated event
+        /// and show success toast
+        /// and update the event list
+        EventModel? updatedEvent = await homeProvider.getEventById(model.id ?? '');
+        if (updatedEvent != null) {
+          Navigator.pop(context, updatedEvent);
+          print('Updated Event: ${updatedEvent.toJson()}');
+        }
         CherryToast.success(
           title: Text(AppLocalizations.of(context)!.eventUpdated),
           animationCurve: Curves.easeInOut,
